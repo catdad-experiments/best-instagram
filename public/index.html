@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Best Instagram</title>
+</head>
+<body>
+  <button id="login">Log In</button>
+
+  <script>
+    var login = document.querySelector('#login');
+
+    var clientId = '1cce8de545d54a14bde4272118af4b54';
+    var redirectTo = encodeURIComponent('https://visualstupid.now.sh/instagram/login');
+
+    login.onclick = function () {
+      window.location.href = 'https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=' + redirectTo + '&response_type=code';
+    };
+  </script>
+</body>
+</html>
