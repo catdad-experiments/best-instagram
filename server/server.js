@@ -15,6 +15,8 @@ var apiKey = process.env.INSTA_API_KEY;
 var apiSecret = process.env.INSTA_API_SECRET;
 var redirectUri = 'https://visualstupid.now.sh/instagram/login';
 
+var port = process.env.DEV_PORT || 80;
+
 app.use(express.static(path.resolve(rootDir, 'public')));
 app.use(express.static(path.resolve(rootDir, 'build')));
 
@@ -52,4 +54,6 @@ app.get('/instagram/login', function (req, res) {
   });
 });
 
-http.createServer(app).listen(80);
+http.createServer(app).listen(port, function () {
+  console.log('listening on port', port);
+});
