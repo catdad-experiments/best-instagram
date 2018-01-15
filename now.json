@@ -1,0 +1,6 @@
+{
+  "env": {
+    "INSTA_API_KEY": "@insta-api-key",
+    "INSTA_API_SECRET": "@insta-api-secret"
+  }
+}
