@@ -7,15 +7,9 @@
 <body>
   <button id="login">Log In</button>
 
-  <script>
-    var login = document.querySelector('#login');
+  <!--CDN stuff-->
+  <script src="https://www.kirilv.com/tiny.cdn/lib/request/latest/request.min.js"></script>
 
-    var clientId = '1cce8de545d54a14bde4272118af4b54';
-    var redirectTo = encodeURIComponent('https://visualstupid.now.sh/instagram/login');
-
-    login.onclick = function () {
-      window.location.href = 'https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=' + redirectTo + '&response_type=code';
-    };
-  </script>
+  <script src="index.js"></script>
 </body>
 </html>
