@@ -1,0 +1,33 @@
+html, body {
+  background: #e5e5e5;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+  font-family: sans-serif;
+  color: #383838;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  flex-grow: 0;
+  text-align: center;
+  padding: 6px;
+}
+
+.hide {
+  display: none;
+}
+
+.container {
+  position: relative;
+  flex-grow: 100;
+  width: 100%;
+  max-width: 1000px;
+  background: white;
+  margin: 0 auto;
+}

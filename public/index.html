@@ -3,15 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Best Instagram</title>
+
+  <link rel="stylesheet" href="index.css">
+
+  <script>
+    var TOKEN = '54458418.1cce8de.8b241f6cac374f12b3a60640ece2b8b4'
+  </script>
 </head>
 <body>
-  <button id="login">Log In</button>
-  <button id="get-images">Get Images</button>
+  <div class="container">
+    <div id="login-flow" class="hide">
+      <button id="login">Log In</button>
+    </div>
 
-  <div id="images"></div>
+    <div id="image-flow" class="hide">
+      <button id="get-images">Get Images</button>
+      <div id="images"></div>
+    </div>
+
+  </div>
+
+  <footer>Created by kirilv.</footer>
+
+  <script>
+    (function () {
+      var loginFlow = document.querySelector('#login-flow');
+      var imageFlow = document.querySelector('#image-flow');
+
+      if (TOKEN) {
+        imageFlow.classList.remove('hide');
+      } else {
+        loginFlow.classList.remove('hide');
+      }
+    }());
+  </script>
 
   <!--CDN stuff-->
   <script src="https://www.kirilv.com/tiny.cdn/lib/request/latest/request.min.js"></script>
+
+
 
   <script src="index.js"></script>
 </body>
