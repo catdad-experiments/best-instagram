@@ -8,22 +8,28 @@
   <link rel="stylesheet" href="index.css">
 
   <script>
-    var TOKEN = '54458418.1cce8de.8b241f6cac374f12b3a60640ece2b8b4'
+    var TOKEN = '';
   </script>
 </head>
 <body>
   <header>Best Instagram Posts</header>
 
   <div class="container">
-    <div id="login-flow" class="hide">
-      <button id="login">Log In</button>
+    <div id="login-flow" class="flow hide">
+      <div class="flex-center">
+        <div class="controls">
+          <button id="login">Log In</button>
+        </div>
+      </div>
     </div>
 
-    <div id="image-flow" class="hide">
-      <div class="controls">
-        <button id="get-images">Get Images</button>
+    <div id="image-flow" class="flow hide">
+      <div class="flex-center">
+        <div class="controls">
+          <button id="get-images">Get Images</button>
+        </div>
+        <div id="images" class="hero"></div>
       </div>
-      <div id="images" class="hero"></div>
     </div>
 
   </div>

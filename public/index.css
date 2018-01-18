@@ -53,12 +53,15 @@ button:focus {
   background: #4e4e4e;
 }
 
-.hide {
+.hide, .flow.hide {
   display: none;
 }
 
 .container {
   position: relative;
+  display: flex;
+  flex-direction: column;
+
   flex-grow: 100;
   width: 100%;
   max-width: 1000px;
@@ -67,8 +70,21 @@ button:focus {
   text-align: center;
 }
 
+.flow {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 100;
+}
+
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 100%;
+}
+
 .controls {
-  margin: 10px 0;
+  margin: auto;
 }
 
 .hero {
