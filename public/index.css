@@ -14,6 +14,10 @@ body {
   flex-direction: column;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 header, footer {
   flex-grow: 0;
   text-align: center;
@@ -31,6 +35,24 @@ footer {
   font-size: 0.8rem;
 }
 
+button {
+  color: #ffda00;
+  background: #6d6d6d;
+
+  border: none;
+  outline: none;
+  padding: 0.7rem;
+  border-radius: 3rem;
+  margin: 0;
+
+  text-transform: lowercase;
+  font-weight: bold;
+}
+
+button:focus {
+  background: #4e4e4e;
+}
+
 .hide {
   display: none;
 }
@@ -45,11 +67,13 @@ footer {
   text-align: center;
 }
 
+.controls {
+  margin: 10px 0;
+}
+
 .hero {
   width: 100%;
   max-width: 800px;
-  border: 1px solid #bfbfbf;
-  box-sizing: border-box;
   margin: 10px auto;
 
   background: white;
@@ -57,4 +81,5 @@ footer {
 
 .hero svg, .hero img {
   display: block;
+  border: 1px solid #bfbfbf;
 }
