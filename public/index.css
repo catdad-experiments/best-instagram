@@ -48,10 +48,13 @@ footer {
 .hero {
   width: 100%;
   max-width: 800px;
-  max-height: 800px;
   border: 1px solid #bfbfbf;
   box-sizing: border-box;
   margin: 10px auto;
 
   background: white;
+}
+
+.hero svg, .hero img {
+  display: block;
 }
