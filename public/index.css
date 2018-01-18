@@ -1,10 +1,11 @@
 html, body {
-  background: #e5e5e5;
+  background: #efefef;
   margin: 0;
   padding: 0;
   height: 100%;
 
   font-family: sans-serif;
+  font-size: 12pt;
   color: #383838;
 }
 
@@ -13,10 +14,21 @@ body {
   flex-direction: column;
 }
 
-footer {
+header, footer {
   flex-grow: 0;
   text-align: center;
+
+  background: #ffda00;
+  font-weight: bold;
+}
+
+header {
+  padding: 12px;
+}
+
+footer {
   padding: 6px;
+  font-size: 0.8rem;
 }
 
 .hide {
@@ -28,6 +40,18 @@ footer {
   flex-grow: 100;
   width: 100%;
   max-width: 1000px;
-  background: white;
+
   margin: 0 auto;
+  text-align: center;
+}
+
+.hero {
+  width: 100%;
+  max-width: 800px;
+  max-height: 800px;
+  border: 1px solid #bfbfbf;
+  box-sizing: border-box;
+  margin: 10px auto;
+
+  background: white;
 }
