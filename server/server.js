@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* jshint node: true, esversion: 6 */
 
 var http = require('http');
 var https = require('https');
@@ -15,7 +15,20 @@ var apiKey = process.env.INSTA_API_KEY;
 var apiSecret = process.env.INSTA_API_SECRET;
 var redirectUri = 'https://visualstupid.now.sh/instagram/login';
 
-var port = process.env.DEV_PORT || 80;
+var indexHtml = fs.readFileSync(path.resolve(rootDir, 'views/index.html'), 'utf8')
+  .split('<!--API TOKEN-->');
+
+var PORT = process.env.DEV_PORT || 80;
+var TOKEN = process.env.DEV_TOKEN || '';
+
+function render(token) {
+  return `${indexHtml[0]}<script>var TOKEN="${token}";</script>${indexHtml[1]}`;
+}
+
+app.get('/', function (req, res) {
+  res.writeHead(200, { 'content-type': 'text/html' });
+  res.end(render(TOKEN));
+});
 
 app.use(express.static(path.resolve(rootDir, 'public')));
 app.use(express.static(path.resolve(rootDir, 'build')));
@@ -54,6 +67,6 @@ app.get('/instagram/login', function (req, res) {
   });
 });
 
-http.createServer(app).listen(port, function () {
-  console.log('listening on port', port);
+http.createServer(app).listen(PORT, function () {
+  console.log('listening on port', PORT);
 });
