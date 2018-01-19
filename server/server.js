@@ -25,18 +25,15 @@ function render(token) {
   return `${indexHtml[0]}<script>var TOKEN="${token}";</script>${indexHtml[1]}`;
 }
 
-app.get('/', function (req, res) {
-  res.writeHead(200, { 'content-type': 'text/html' });
-  res.end(render(TOKEN));
-});
-
-app.use(express.static(path.resolve(rootDir, 'public')));
-app.use(express.static(path.resolve(rootDir, 'build')));
-
 function writeError(res, message) {
   res.writeHead(580);
   res.end(message.toString());
 }
+
+app.get('/', function (req, res) {
+  res.writeHead(200, { 'content-type': 'text/html' });
+  res.end(render(TOKEN));
+});
 
 app.get('/instagram/login', function (req, res) {
   var code = req.query.code;
@@ -66,6 +63,10 @@ app.get('/instagram/login', function (req, res) {
     res.end('<html><body>' + JSON.stringify(JSON.parse(body), null, 2) + '</body></html>');
   });
 });
+
+// add public file handlers at the end
+app.use(express.static(path.resolve(rootDir, 'public')));
+app.use(express.static(path.resolve(rootDir, 'build')));
 
 http.createServer(app).listen(PORT, function () {
   console.log(`listening on port ${PORT} using node ${process.version}`);
