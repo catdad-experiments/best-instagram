@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* jshint node: true, esversion: 6 */
 
 var http = require('http');
 var https = require('https');
@@ -55,5 +55,5 @@ app.get('/instagram/login', function (req, res) {
 });
 
 http.createServer(app).listen(port, function () {
-  console.log('listening on port', port, 'using node', process.version);
+  console.log(`listening on port ${port} using node ${process.version}`);
 });
