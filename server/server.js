@@ -15,15 +15,18 @@ var apiKey = process.env.INSTA_API_KEY;
 var apiSecret = process.env.INSTA_API_SECRET;
 var redirectUri = 'https://visualstupid.now.sh/instagram/login';
 
-var indexHtml = fs.readFileSync(path.resolve(rootDir, 'views/index.html'), 'utf8')
-  .split('<!--API TOKEN-->');
 
 var PORT = process.env.DEV_PORT || 80;
 var TOKEN = process.env.DEV_TOKEN || '';
 
-function render(token) {
-  return `${indexHtml[0]}<script>var TOKEN="${token}";</script>${indexHtml[1]}`;
-}
+var renderIndex = (function () {
+  var indexHtml = fs.readFileSync(path.resolve(rootDir, 'views/index.html'), 'utf8')
+    .split('<!--API TOKEN-->');
+
+  return function render(token) {
+    return `${indexHtml[0]}<script>var TOKEN="${token}";</script>${indexHtml[1]}`;
+  };
+}());
 
 function writeError(res, message) {
   res.writeHead(580);
@@ -32,7 +35,7 @@ function writeError(res, message) {
 
 app.get('/', function (req, res) {
   res.writeHead(200, { 'content-type': 'text/html' });
-  res.end(render(TOKEN));
+  res.end(renderIndex(TOKEN));
 });
 
 app.get('/instagram/login', function (req, res) {
