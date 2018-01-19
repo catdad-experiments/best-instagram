@@ -2,13 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Best Instagram</title>
+
+  <link rel="stylesheet" href="index.css">
+
+  <script>
+    var TOKEN = '';
+  </script>
 </head>
 <body>
-  <button id="login">Log In</button>
-  <button id="get-images">Get Images</button>
+  <header>Best Instagram Posts</header>
 
-  <div id="images"></div>
+  <div class="container">
+    <div id="login-flow" class="flow hide">
+      <div class="flex-center">
+        <div class="controls">
+          <button id="login">Log In through Instagram</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="image-flow" class="flow hide">
+      <div class="flex-center">
+        <div class="controls">
+          <button id="get-images">Get Images</button>
+        </div>
+        <div id="images" class="hero"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>made with ❤ by <a hred="https://www.instagram.com/kirilv/">kirilv</a></footer>
+
+  <script>
+    (function () {
+      var loginFlow = document.querySelector('#login-flow');
+      var imageFlow = document.querySelector('#image-flow');
+
+      if (TOKEN) {
+        imageFlow.classList.remove('hide');
+      } else {
+        loginFlow.classList.remove('hide');
+      }
+    }());
+  </script>
 
   <!--CDN stuff-->
   <script src="https://www.kirilv.com/tiny.cdn/lib/request/latest/request.min.js"></script>
