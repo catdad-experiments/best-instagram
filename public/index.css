@@ -1,5 +1,5 @@
 html, body {
-  background: #efefef;
+  background: #f4f4f4;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -22,8 +22,9 @@ header, footer {
   flex-grow: 0;
   text-align: center;
 
-  background: #ffda00;
+  background: #dd3769;
   font-weight: bold;
+  color: #f4f4f4;
 }
 
 header {
@@ -36,21 +37,23 @@ footer {
 }
 
 button {
-  color: #ffda00;
-  background: #6d6d6d;
+  color: #f4f4f4;
+  background: #dd3769;
 
   border: none;
   outline: none;
   padding: 0.7rem;
-  border-radius: 3rem;
+  border-radius: 3px;
   margin: 0;
+  min-width: 10rem;
+  padding: 7px 35px;
 
   text-transform: lowercase;
   font-weight: bold;
 }
 
 button:focus {
-  background: #4e4e4e;
+  background: #ac234c;
 }
 
 .hide, .flow.hide {
