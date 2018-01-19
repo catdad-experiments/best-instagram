@@ -15,11 +15,12 @@ var apiKey = process.env.INSTA_API_KEY;
 var apiSecret = process.env.INSTA_API_SECRET;
 var redirectUri = 'https://visualstupid.now.sh/instagram/login';
 
-
 var PORT = process.env.DEV_PORT || 80;
 var TOKEN = process.env.DEV_TOKEN || '';
 
 var renderIndex = (function () {
+  // read the index file and store it in memory, so we render it
+  // fast every time
   var indexHtml = fs.readFileSync(path.resolve(rootDir, 'views/index.html'), 'utf8')
     .split('<!--API TOKEN-->');
 
