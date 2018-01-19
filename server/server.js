@@ -55,5 +55,5 @@ app.get('/instagram/login', function (req, res) {
 });
 
 http.createServer(app).listen(port, function () {
-  console.log('listening on port', port);
+  console.log('listening on port', port, 'using node', process.version);
 });
