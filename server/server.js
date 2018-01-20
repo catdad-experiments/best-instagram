@@ -107,6 +107,13 @@ app.get('/instagram/login', function (req, res) {
 app.use(express.static(path.resolve(rootDir, 'public')));
 app.use(express.static(path.resolve(rootDir, 'build')));
 
+// add error handler
+app.use(function (err, req, res, next) {
+  console.error('express error:', err);
+  req.writeHead(580, 'InternalError');
+  res.end();
+});
+
 // return a 404 with no body for anything that was not handled already
 app.all('*', function (req, res) {
   res.writeHead(404);
