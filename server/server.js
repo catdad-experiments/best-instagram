@@ -48,8 +48,14 @@ function getRootUrl(req) {
 app.use(cookies.connect());
 
 app.get('/', function (req, res) {
+  var token = '';
+
+  try {
+    token = req.cookies.get('igtoken') || token;
+  } catch (e) { }
+
   res.writeHead(200, { 'content-type': 'text/html' });
-  res.end(renderIndex(TOKEN));
+  res.end(renderIndex(token));
 });
 
 app.get('/instagram/login', function (req, res) {
