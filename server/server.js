@@ -110,7 +110,7 @@ app.use(express.static(path.resolve(rootDir, 'build')));
 // add error handler
 app.use(function (err, req, res, next) {
   console.error('express error:', err);
-  req.writeHead(580, 'InternalError');
+  res.writeHead(580, 'InternalError');
   res.end();
 });
 
