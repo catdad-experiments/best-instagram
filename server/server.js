@@ -87,6 +87,7 @@ app.get('/instagram/login', function (req, res) {
     try {
       data = JSON.parse(body);
     } catch (e) {
+      console.error('invalid json returned by Instagram', body);
       return writeError(res, new Error('invalid data returned by Instagram'));
     }
 
