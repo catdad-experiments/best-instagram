@@ -55,7 +55,7 @@ app.get('/', function (req, res) {
   } catch (e) { }
 
   res.writeHead(200, { 'content-type': 'text/html' });
-  res.end(renderIndex(token));
+  res.end(renderIndex(token || TOKEN));
 });
 
 app.get('/instagram/login', function (req, res) {
