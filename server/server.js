@@ -7,6 +7,7 @@ var fs = require('fs');
 var util = require('util');
 
 var request = require('request');
+var cookies = require('cookies');
 var express = require('express');
 var app = express();
 
@@ -15,15 +16,47 @@ var apiKey = process.env.INSTA_API_KEY;
 var apiSecret = process.env.INSTA_API_SECRET;
 var redirectUri = 'https://visualstupid.now.sh/instagram/login';
 
-var port = process.env.DEV_PORT || 80;
+var PORT = process.env.DEV_PORT || 80;
+var TOKEN = process.env.DEV_TOKEN || '';
 
-app.use(express.static(path.resolve(rootDir, 'public')));
-app.use(express.static(path.resolve(rootDir, 'build')));
+var renderIndex = (function () {
+  // read the index file and store it in memory, so we render it
+  // fast every time
+  var indexHtml = fs.readFileSync(path.resolve(rootDir, 'views/index.html'), 'utf8')
+    .split('<!--API TOKEN-->');
+
+  return function render(token) {
+    return `${indexHtml[0]}<script>var TOKEN="${token}";</script>${indexHtml[1]}`;
+  };
+}());
 
 function writeError(res, message) {
   res.writeHead(580);
   res.end(message.toString());
 }
+
+function getRootUrl(req) {
+  var proto = req.headers['x-forwarded-proto'] || 'http';
+  var host = req.headers['x-forwarded-host'] ||
+      req.headers.hostname ||
+      req.headers.host ||
+      `localhost:${PORT}`;
+
+  return `${proto}://${host}`;
+}
+
+app.use(cookies.connect());
+
+app.get('/', function (req, res) {
+  var token = '';
+
+  try {
+    token = req.cookies.get('igtoken') || token;
+  } catch (e) { }
+
+  res.writeHead(200, { 'content-type': 'text/html' });
+  res.end(renderIndex(token));
+});
 
 app.get('/instagram/login', function (req, res) {
   var code = req.query.code;
@@ -49,11 +82,31 @@ app.get('/instagram/login', function (req, res) {
       return writeError(res, err.toString());
     }
 
-    res.writeHead(200, { 'content-type': 'text/html' });
-    res.end('<html><body>' + JSON.stringify(JSON.parse(body), null, 2) + '</body></html>');
+    var data;
+
+    try {
+      data = JSON.parse(body);
+    } catch (e) {
+      console.error('invalid json returned by Instagram', body);
+      return writeError(res, new Error('invalid data returned by Instagram'));
+    }
+
+    // redirect back to the root, with cookies
+    res.cookies.set('igtoken', data.access_token, {
+      httpOnly: true,
+      overwrite: true
+    });
+    res.writeHead(302, {
+      location: getRootUrl(req)
+    });
+    res.end('');
   });
 });
 
-http.createServer(app).listen(port, function () {
-  console.log(`listening on port ${port} using node ${process.version}`);
+// add public file handlers at the end
+app.use(express.static(path.resolve(rootDir, 'public')));
+app.use(express.static(path.resolve(rootDir, 'build')));
+
+http.createServer(app).listen(PORT, function () {
+  console.log(`listening on port ${PORT} using node ${process.version}`);
 });

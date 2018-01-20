@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/catdad-experiments/best-instagram#readme",
   "dependencies": {
+    "cookies": "^0.7.1",
     "express": "^4.16.2",
     "request": "^2.83.0"
   },
