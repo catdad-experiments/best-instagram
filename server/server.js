@@ -7,6 +7,7 @@ var fs = require('fs');
 var util = require('util');
 
 var request = require('request');
+var cookies = require('cookies');
 var express = require('express');
 var app = express();
 
@@ -33,6 +34,18 @@ function writeError(res, message) {
   res.writeHead(580);
   res.end(message.toString());
 }
+
+function getRootUrl(req) {
+  var proto = req.headers['x-forwarded-proto'] || 'http';
+  var host = req.headers['x-forwarded-host'] ||
+      req.headers.hostname ||
+      req.headers.host ||
+      `localhost:${PORT}`;
+
+  return `${proto}://${host}`;
+}
+
+app.use(cookies.connect());
 
 app.get('/', function (req, res) {
   res.writeHead(200, { 'content-type': 'text/html' });
@@ -63,8 +76,15 @@ app.get('/instagram/login', function (req, res) {
       return writeError(res, err.toString());
     }
 
-    res.writeHead(200, { 'content-type': 'text/html' });
-    res.end('<html><body>' + JSON.stringify(JSON.parse(body), null, 2) + '</body></html>');
+    // redirect back to the root, with cookies
+    res.cookies.set('igtoken', body.access_token, {
+      httpOnly: true,
+      overwrite: true
+    });
+    res.writeHead(302, {
+      location: getRootUrl(req)
+    });
+    res.end('');
   });
 });
 
