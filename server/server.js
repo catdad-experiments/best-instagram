@@ -107,6 +107,12 @@ app.get('/instagram/login', function (req, res) {
 app.use(express.static(path.resolve(rootDir, 'public')));
 app.use(express.static(path.resolve(rootDir, 'build')));
 
+// return a 404 with no body for anything that was not handled already
+app.all('*', function (req, res) {
+  res.writeHead(404);
+  res.end();
+});
+
 http.createServer(app).listen(PORT, function () {
   console.log(`listening on port ${PORT} using node ${process.version}`);
 });
