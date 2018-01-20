@@ -82,8 +82,16 @@ app.get('/instagram/login', function (req, res) {
       return writeError(res, err.toString());
     }
 
+    var data;
+
+    try {
+      data = JSON.parse(body);
+    } catch (e) {
+      return writeError(res, new Error('invalid data returned by Instagram'));
+    }
+
     // redirect back to the root, with cookies
-    res.cookies.set('igtoken', body.access_token, {
+    res.cookies.set('igtoken', data.access_token, {
       httpOnly: true,
       overwrite: true
     });
