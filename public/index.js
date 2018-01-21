@@ -101,8 +101,20 @@ window.addEventListener('load', function () {
       '</svg>', urls);
   }
 
+  function summarize(posts) {
+    return posts.map(function (post) {
+      return {
+        id: post.id,
+        likes: post.likes.count,
+        comments: post.comments.count,
+        imageUrl: post.images.standard_resolution.url,
+        datetime: new Date(post.created_time + 1000)
+      };
+    });
+  }
+
   getImagesButton.onclick = function () {
-    var count = 0;
+    var allPosts = [];
 
     api.photos()
     .then(function handleBody(posts) {
@@ -110,10 +122,15 @@ window.addEventListener('load', function () {
         return;
       }
 
-      count += posts.length;
+      allPosts = allPosts.concat(summarize(posts));
 
-      var nine = posts.slice(0, 9).map(function (post) {
-        return post.images.standard_resolution.url;
+      allPosts.sort(function (a, b) {
+        // most likes first
+        return b.likes - a.likes;
+      });
+
+      var nine = allPosts.slice(0, 9).map(function (post) {
+        return post.imageUrl;
       });
 
       var content = svg(nine);
