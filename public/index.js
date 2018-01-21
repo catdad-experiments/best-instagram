@@ -112,6 +112,8 @@ window.addEventListener('load', function () {
         }
 
         var img = new Image();
+        // allows us to get these off of the Instagram
+        // servers directly
         img.setAttribute('crossOrigin', 'Anonymous');
 
         img.onload = function () {
