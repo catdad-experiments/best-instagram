@@ -130,6 +130,7 @@ window.addEventListener('load', function () {
         return b.likes - a.likes;
       });
 
+      // only update the dom if we have enough posts
       if (allPosts.length >= 9) {
         var nine = allPosts.slice(0, 9).map(function (post) {
           return post.imageUrl;
