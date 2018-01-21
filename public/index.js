@@ -101,38 +101,45 @@ window.addEventListener('load', function () {
       '</svg>', urls);
   }
 
+  // get an image object with the source already loaded
+  function getLoadedImage(src) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      // allows us to get these off of the Instagram
+      // servers directly
+      img.setAttribute('crossOrigin', 'Anonymous');
+
+      img.onload = function () {
+        resolve(img);
+      };
+
+      img.onerror = function (err) {
+        reject(new Error('could not load the image'));
+      };
+
+      img.src = src;
+    });
+  }
+
   // add some helpers to a post summary object
   function createPostObject(post) {
     var base64Str;
 
     function getBase64() {
-      return new Promise(function (resolve, reject) {
-        if (base64Str) {
-          return resolve(base64Str);
-        }
+      if (base64Str) {
+        return Promise.resolve(base64Str);
+      }
 
-        var img = new Image();
-        // allows us to get these off of the Instagram
-        // servers directly
-        img.setAttribute('crossOrigin', 'Anonymous');
+      return getLoadedImage(post.imageUrl).then(function (img) {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
 
-        img.onload = function () {
-          var canvas = document.createElement('canvas');
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
 
-          canvas.getContext('2d').drawImage(img, 0, 0);
+        base64Str = canvas.toDataURL('image/png');
 
-          base64Str = canvas.toDataURL('image/png');
-
-          resolve(base64Str);
-        };
-
-        img.onerror = function (err) {
-          reject(new Error('could not load the image'));
-        };
-
-        img.src = post.imageUrl;
+        return Promise.resolve(base64Str);
       });
     }
 
