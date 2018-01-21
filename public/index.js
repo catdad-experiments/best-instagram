@@ -108,7 +108,7 @@ window.addEventListener('load', function () {
         likes: post.likes.count,
         comments: post.comments.count,
         imageUrl: post.images.standard_resolution.url,
-        datetime: new Date(post.created_time + 1000)
+        datetime: new Date(post.created_time * 1000)
       };
     });
   }
