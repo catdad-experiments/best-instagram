@@ -24,10 +24,6 @@ window.addEventListener('load', function () {
     );
   }
 
-  function date(createdTime) {
-    return new Date(createdTime * 1000);
-  }
-
   var api = {
     media: function (sinceId) {
       return new Promise(function (resolve, reject) {
@@ -78,28 +74,6 @@ window.addEventListener('load', function () {
   loginButton.onclick = function () {
     loginRedirect();
   };
-
-  function image(url) {
-    var img = document.createElement('img');
-    img.src = url;
-
-    return img;
-  }
-
-  function svg(urls) {
-    return renderMustache(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 99">' +
-        '<image width="33" height="33" x="0"  y="0"  xlink:href="${0}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="33" y="0"  xlink:href="${1}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="66" y="0"  xlink:href="${2}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="0"  y="33" xlink:href="${3}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="33" y="33" xlink:href="${4}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="66" y="33" xlink:href="${5}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="0"  y="66" xlink:href="${6}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="33" y="66" xlink:href="${7}" preserveAspectRatio="xMidYMid slice" />' +
-        '<image width="33" height="33" x="66" y="66" xlink:href="${8}" preserveAspectRatio="xMidYMid slice" />' +
-      '</svg>', urls);
-  }
 
   // get an image object with the source already loaded
   function getLoadedImage(src) {
