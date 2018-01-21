@@ -140,15 +140,12 @@ window.addEventListener('load', function () {
         imagesDiv.innerHTML = content;
       }
 
-//      posts.forEach(function (post) {
-//        imagesDiv.appendChild(image(post.images.standard_resolution.url));
-//      });
+      var lastPost = summaries[summaries.length - 1];
 
-//      if (count < 25) {
-//        var lastId = posts[posts.length - 1].id;
-//
-//        return api.photos(lastId).then(handleBody);
-//      }
+      // Instagram only allows ~6 months of photos in recent,
+      // so just get them all... this could be a bad idea at
+      // some point, but oh well.
+      return api.photos(lastPost.id).then(handleBody);
     }).catch(function (err) {
       console.log(err);
     });
