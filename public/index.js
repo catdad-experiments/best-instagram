@@ -180,7 +180,7 @@ window.addEventListener('load', function () {
   function renderPosts(sortedPosts) {
     // do nothing, for now, if we don't have enough posts
     if (sortedPosts.length < 9) {
-      return Promise.resolve();
+      return Promise.resolve(null);
     }
 
     return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
@@ -231,8 +231,7 @@ window.addEventListener('load', function () {
         }
       });
 
-      imagesDiv.innerHTML = '';
-      imagesDiv.appendChild(canvas);
+      return Promise.resolve(canvas);
     });
   }
 
@@ -255,7 +254,13 @@ window.addEventListener('load', function () {
         return b.likes - a.likes;
       });
 
-      return renderPosts(allPosts).then(function () {
+      // get a rendered dom element with the image
+      return renderPosts(allPosts).then(function (domElem) {
+        if (domElem) {
+          imagesDiv.innerHTML = '';
+          imagesDiv.appendChild(domElem);
+        }
+      }).then(function () {
         var lastPost = summaries[summaries.length - 1];
 
         // Instagram only allows ~6 months of photos in recent,
