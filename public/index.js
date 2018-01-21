@@ -101,8 +101,20 @@ window.addEventListener('load', function () {
       '</svg>', urls);
   }
 
+  function summarize(posts) {
+    return posts.map(function (post) {
+      return {
+        id: post.id,
+        likes: post.likes.count,
+        comments: post.comments.count,
+        imageUrl: post.images.standard_resolution.url,
+        datetime: new Date(post.created_time * 1000)
+      };
+    });
+  }
+
   getImagesButton.onclick = function () {
-    var count = 0;
+    var allPosts = [];
 
     api.photos()
     .then(function handleBody(posts) {
@@ -110,25 +122,29 @@ window.addEventListener('load', function () {
         return;
       }
 
-      count += posts.length;
+      var summaries = summarize(posts);
+      allPosts = allPosts.concat(summaries);
 
-      var nine = posts.slice(0, 9).map(function (post) {
-        return post.images.standard_resolution.url;
+      allPosts.sort(function (a, b) {
+        // most likes first
+        return b.likes - a.likes;
       });
 
-      var content = svg(nine);
+      // only update the dom if we have enough posts
+      if (allPosts.length >= 9) {
+        var content = svg(allPosts.slice(0, 9).map(function (post) {
+          return post.imageUrl;
+        }));
 
-      imagesDiv.innerHTML = content;
+        imagesDiv.innerHTML = content;
+      }
 
-//      posts.forEach(function (post) {
-//        imagesDiv.appendChild(image(post.images.standard_resolution.url));
-//      });
+      var lastPost = summaries[summaries.length - 1];
 
-//      if (count < 25) {
-//        var lastId = posts[posts.length - 1].id;
-//
-//        return api.photos(lastId).then(handleBody);
-//      }
+      // Instagram only allows ~6 months of photos in recent,
+      // so just get them all... this could be a bad idea at
+      // some point, but oh well.
+      return api.photos(lastPost.id).then(handleBody);
     }).catch(function (err) {
       console.log(err);
     });
