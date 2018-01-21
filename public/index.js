@@ -101,6 +101,7 @@ window.addEventListener('load', function () {
       '</svg>', urls);
   }
 
+  // add some helpers to a post summary object
   function createPostObject(post) {
     var base64Str;
 
@@ -148,6 +149,8 @@ window.addEventListener('load', function () {
     }, post);
   }
 
+  // create friendly summary objects for all posts,
+  // with only props and util I actually care about
   function summarize(posts) {
     return posts.map(function (post) {
       // add helper methods in a separate function,
@@ -163,6 +166,8 @@ window.addEventListener('load', function () {
     });
   }
 
+  // take the list of posts and render them to the page,
+  // for the user's delight
   function renderPosts(allPosts) {
     return new Promise(function (resolve, reject) {
       allPosts.sort(function (a, b) {
