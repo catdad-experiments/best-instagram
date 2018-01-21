@@ -170,21 +170,18 @@ window.addEventListener('load', function () {
 
   // take the list of posts and render them to the page,
   // for the user's delight
-  function renderPosts(allPosts) {
+  function renderPosts(sortedPosts) {
+    // do nothing, for now, if we don't have enough posts
+    if (sortedPosts.length < 9) {
+      return Promise.resolve();
+    }
+
     return new Promise(function (resolve, reject) {
-      allPosts.sort(function (a, b) {
-        // most likes first
-        return b.likes - a.likes;
-      });
+      var content = svg(sortedPosts.slice(0, 9).map(function (post) {
+        return post.imageUrl;
+      }));
 
-      // only update the dom if we have enough posts
-      if (allPosts.length >= 9) {
-        var content = svg(allPosts.slice(0, 9).map(function (post) {
-          return post.imageUrl;
-        }));
-
-        imagesDiv.innerHTML = content;
-      }
+      imagesDiv.innerHTML = content;
 
       resolve();
     });
@@ -202,6 +199,10 @@ window.addEventListener('load', function () {
       var summaries = summarize(posts);
 
       allPosts = allPosts.concat(summaries);
+      allPosts.sort(function (a, b) {
+        // most likes first
+        return b.likes - a.likes;
+      });
 
       return renderPosts(allPosts).then(function () {
         var lastPost = summaries[summaries.length - 1];
