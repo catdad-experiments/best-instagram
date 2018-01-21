@@ -122,20 +122,23 @@ window.addEventListener('load', function () {
         return;
       }
 
-      allPosts = allPosts.concat(summarize(posts));
+      var summaries = summarize(posts);
+      allPosts = allPosts.concat(summaries);
 
       allPosts.sort(function (a, b) {
         // most likes first
         return b.likes - a.likes;
       });
 
-      var nine = allPosts.slice(0, 9).map(function (post) {
-        return post.imageUrl;
-      });
+      if (allPosts.length >= 9) {
+        var nine = allPosts.slice(0, 9).map(function (post) {
+          return post.imageUrl;
+        });
 
-      var content = svg(nine);
+        var content = svg(nine);
 
-      imagesDiv.innerHTML = content;
+        imagesDiv.innerHTML = content;
+      }
 
 //      posts.forEach(function (post) {
 //        imagesDiv.appendChild(image(post.images.standard_resolution.url));
