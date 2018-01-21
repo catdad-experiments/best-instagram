@@ -180,7 +180,6 @@ window.addEventListener('load', function () {
       return post.getBase64();
     })).then(function (allBase64Images) {
       var content = svg(allBase64Images);
-
       imagesDiv.innerHTML = content;
     });
   }
@@ -213,7 +212,7 @@ window.addEventListener('load', function () {
         return api.photos(lastPost.id).then(handleBody);
       });
     }).catch(function (err) {
-      console.log(err);
+      console.error(err);
     });
   };
 
