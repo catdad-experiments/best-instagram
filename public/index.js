@@ -176,14 +176,12 @@ window.addEventListener('load', function () {
       return Promise.resolve();
     }
 
-    return new Promise(function (resolve, reject) {
-      var content = svg(sortedPosts.slice(0, 9).map(function (post) {
-        return post.imageUrl;
-      }));
+    return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
+      return post.getBase64();
+    })).then(function (allBase64Images) {
+      var content = svg(allBase64Images);
 
       imagesDiv.innerHTML = content;
-
-      resolve();
     });
   }
 
