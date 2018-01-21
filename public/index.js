@@ -101,15 +101,65 @@ window.addEventListener('load', function () {
       '</svg>', urls);
   }
 
+  function createPostObject(post) {
+    var base64Str;
+
+    function getBase64() {
+      return new Promise(function (resolve, reject) {
+        if (base64Str) {
+          return resolve(base64Str);
+        }
+
+        var img = new Image();
+        img.setAttribute('crossOrigin', 'Anonymous');
+
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+
+          canvas.getContext('2d').drawImage(img, 0, 0);
+
+          base64Str = canvas.toDataURL('image/png');
+
+          resolve(base64Str);
+        };
+
+        img.onerror = function (err) {
+          reject(new Error('could not load the image'));
+        };
+
+        img.src = post.imageUrl;
+      });
+    }
+
+    function discardBase64() {
+      base64Str = null;
+    }
+
+    function hasBase64() {
+      return !!base64Str;
+    }
+
+    return Object.assign({
+      getBase64: getBase64,
+      discardBase64: discardBase64,
+      hasBase64: hasBase64
+    }, post);
+  }
+
   function summarize(posts) {
     return posts.map(function (post) {
-      return {
+      // add helper methods in a separate function,
+      // so that we do not keep the whole posts array
+      // in scope memory
+      return createPostObject({
         id: post.id,
         likes: post.likes.count,
         comments: post.comments.count,
         imageUrl: post.images.standard_resolution.url,
         datetime: new Date(post.created_time * 1000)
-      };
+      });
     });
   }
 
