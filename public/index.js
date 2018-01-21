@@ -132,11 +132,9 @@ window.addEventListener('load', function () {
 
       // only update the dom if we have enough posts
       if (allPosts.length >= 9) {
-        var nine = allPosts.slice(0, 9).map(function (post) {
+        var content = svg(allPosts.slice(0, 9).map(function (post) {
           return post.imageUrl;
-        });
-
-        var content = svg(nine);
+        }));
 
         imagesDiv.innerHTML = content;
       }
