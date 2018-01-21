@@ -256,10 +256,20 @@ window.addEventListener('load', function () {
 
       // get a rendered dom element with the image
       return renderPosts(allPosts).then(function (domElem) {
+        // we got a canvas, render it
         if (domElem) {
           imagesDiv.innerHTML = '';
           imagesDiv.appendChild(domElem);
         }
+
+        // get the data from the canvas and render it as an
+        // image element
+//        if (domElem) {
+//          return getLoadedImage(domElem.toDataURL('image/png')).then(function (img) {
+//            imagesDiv.innerHTML = '';
+//            imagesDiv.appendChild(img);
+//          });
+//        }
       }).then(function () {
         var lastPost = summaries[summaries.length - 1];
 
