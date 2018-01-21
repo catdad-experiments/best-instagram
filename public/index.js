@@ -198,6 +198,8 @@ window.addEventListener('load', function () {
 
       var summaries = summarize(posts);
 
+      // keep track of all posts we've retrieved
+      // and sort them
       allPosts = allPosts.concat(summaries);
       allPosts.sort(function (a, b) {
         // most likes first
