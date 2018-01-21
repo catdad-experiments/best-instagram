@@ -163,18 +163,8 @@ window.addEventListener('load', function () {
     });
   }
 
-  getImagesButton.onclick = function () {
-    var allPosts = [];
-
-    api.photos()
-    .then(function handleBody(posts) {
-      if (!posts.length) {
-        return;
-      }
-
-      var summaries = summarize(posts);
-      allPosts = allPosts.concat(summaries);
-
+  function renderPosts(allPosts) {
+    return new Promise(function (resolve, reject) {
       allPosts.sort(function (a, b) {
         // most likes first
         return b.likes - a.likes;
@@ -189,12 +179,31 @@ window.addEventListener('load', function () {
         imagesDiv.innerHTML = content;
       }
 
-      var lastPost = summaries[summaries.length - 1];
+      resolve();
+    });
+  }
 
-      // Instagram only allows ~6 months of photos in recent,
-      // so just get them all... this could be a bad idea at
-      // some point, but oh well.
-      return api.photos(lastPost.id).then(handleBody);
+  getImagesButton.onclick = function () {
+    var allPosts = [];
+
+    api.photos()
+    .then(function handleBody(posts) {
+      if (!posts.length) {
+        return;
+      }
+
+      var summaries = summarize(posts);
+
+      allPosts = allPosts.concat(summaries);
+
+      return renderPosts(allPosts).then(function () {
+        var lastPost = summaries[summaries.length - 1];
+
+        // Instagram only allows ~6 months of photos in recent,
+        // so just get them all... this could be a bad idea at
+        // some point, but oh well.
+        return api.photos(lastPost.id).then(handleBody);
+      });
     }).catch(function (err) {
       console.log(err);
     });
