@@ -184,10 +184,55 @@ window.addEventListener('load', function () {
     }
 
     return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
-      return post.getBase64();
-    })).then(function (allBase64Images) {
-      var content = svg(allBase64Images);
-      imagesDiv.innerHTML = content;
+      // this is a bit round-about, but we want to get a base64 string,
+      // so that we can use that to create a clean image to use
+      // in the collage canvas
+      return post.getBase64().then(function (base64) {
+        return getLoadedImage(base64);
+      });
+    })).then(function (images) {
+      var canvas = document.createElement('canvas');
+
+      // this is the size that instagram serves (as the width)
+      var size = 640;
+      canvas.width = size * 3;
+      canvas.height = size * 3;
+
+      var context = canvas.getContext('2d');
+      var dx, dy = 0;
+
+      images.forEach(function (img, idx) {
+        var i = (idx) % 3;
+        dx = size * i;
+
+        var w = img.naturalWidth;
+        var h = img.naturalHeight;
+        var sx = 0;
+        var sy = 0;
+
+        // instagram always serves images with 640 width and
+        // variable height
+        if (h > w) {
+          sy = (h - w) / 2;
+        }
+
+        // just in case they reverse the above in the future,
+        // handle 640 height with variable width too
+        if (w > h) {
+          sx = (w - h) / 2;
+        }
+
+        context.drawImage(img, sx, sy, size, size, dx, dy, size, size);
+
+        // when we reach the end of the row,
+        // update to use the next row
+        if (i === 2) {
+          dy += size;
+        }
+      });
+
+      imagesDiv.innerHTML = '';
+      imagesDiv.appendChild(canvas);
     });
   }
 
