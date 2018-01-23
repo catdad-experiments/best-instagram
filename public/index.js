@@ -229,14 +229,14 @@ window.addEventListener('load', function () {
       });
 
       // get a rendered dom element with the image
-      return renderPosts(allPosts).then(function (domElem) {
-        if (!domElem) {
+      return renderPosts(allPosts).then(function (canvas) {
+        if (!canvas) {
           return;
         }
 
         // get the data from the canvas and render it as an
         // image element
-        return getLoadedImage(domElem.toDataURL('image/png')).then(function (img) {
+        return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
           imagesDiv.innerHTML = '';
           imagesDiv.appendChild(img);
         });
