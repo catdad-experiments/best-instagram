@@ -151,7 +151,7 @@ window.addEventListener('load', function () {
 
   // take the list of posts and render them to the page,
   // for the user's delight
-  function renderPosts(sortedPosts) {
+  function renderToCanvas(sortedPosts) {
     // do nothing, for now, if we don't have enough posts
     if (sortedPosts.length < 9) {
       return Promise.resolve(null);
@@ -229,21 +229,17 @@ window.addEventListener('load', function () {
       });
 
       // get a rendered dom element with the image
-      return renderPosts(allPosts).then(function (domElem) {
-        if (!domElem) {
+      return renderToCanvas(allPosts).then(function (canvas) {
+        if (!canvas) {
           return;
         }
 
-        // we got a canvas, render it
-        imagesDiv.innerHTML = '';
-        imagesDiv.appendChild(domElem);
-
         // get the data from the canvas and render it as an
         // image element
-//        return getLoadedImage(domElem.toDataURL('image/png')).then(function (img) {
-//          imagesDiv.innerHTML = '';
-//          imagesDiv.appendChild(img);
-//        });
+        return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
+          imagesDiv.innerHTML = '';
+          imagesDiv.appendChild(img);
+        });
       }).then(function () {
         var lastPost = summaries[summaries.length - 1];
 
