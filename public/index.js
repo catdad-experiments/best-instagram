@@ -234,16 +234,12 @@ window.addEventListener('load', function () {
           return;
         }
 
-        // we got a canvas, render it
-        imagesDiv.innerHTML = '';
-        imagesDiv.appendChild(domElem);
-
         // get the data from the canvas and render it as an
         // image element
-//        return getLoadedImage(domElem.toDataURL('image/png')).then(function (img) {
-//          imagesDiv.innerHTML = '';
-//          imagesDiv.appendChild(img);
-//        });
+        return getLoadedImage(domElem.toDataURL('image/png')).then(function (img) {
+          imagesDiv.innerHTML = '';
+          imagesDiv.appendChild(img);
+        });
       }).then(function () {
         var lastPost = summaries[summaries.length - 1];
 
