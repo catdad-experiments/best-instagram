@@ -68,8 +68,7 @@ window.addEventListener('load', function () {
   };
 
   var loginButton = document.querySelector('#login');
-  var getImagesButton = document.querySelector('#get-images');
-  var quickSelectButtons = document.querySelectorAll('.get-images');
+  var quickRangeButtons = document.querySelectorAll('.get-images');
   var imagesDiv = document.querySelector('#images');
 
   loginButton.onclick = function () {
@@ -262,7 +261,7 @@ window.addEventListener('load', function () {
     });
   }
 
-  [].forEach.call(quickSelectButtons, function (button) {
+  [].forEach.call(quickRangeButtons, function (button) {
     var year = button.getAttribute('data-year');
     var minDate, maxDate;
 
