@@ -154,7 +154,7 @@ window.addEventListener('load', function () {
   function renderToCanvas(sortedPosts) {
     // do nothing, for now, if we don't have enough posts
     if (sortedPosts.length < 9) {
-      return Promise.resolve(null);
+      return Promise.reject(new Error('not enough posts'));
     }
 
     return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
