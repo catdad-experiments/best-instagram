@@ -219,8 +219,10 @@ window.addEventListener('load', function () {
     }
 
     var allPosts = [];
+    var min = new Date(minDate);
+    var max = new Date(maxDate);
 
-    api.photos()
+    return api.photos()
     .then(function handleBody(posts) {
       if (!posts.length) {
         return;
@@ -230,7 +232,9 @@ window.addEventListener('load', function () {
 
       // keep track of all posts we've retrieved
       // and sort them
-      allPosts = allPosts.concat(summaries);
+      allPosts = allPosts.concat(summaries.filter(function (post) {
+        return post.datetime > min && post.datetime < max;
+      }));
       allPosts.sort(function (a, b) {
         // most likes first
         return b.likes - a.likes;
@@ -256,8 +260,6 @@ window.addEventListener('load', function () {
         // some point, but oh well.
         return api.photos(lastPost.id).then(handleBody);
       });
-    }).catch(function (err) {
-      console.error(err);
     });
   }
 
@@ -265,13 +267,26 @@ window.addEventListener('load', function () {
     var year = button.getAttribute('data-year');
     var minDate, maxDate;
 
+    // convert to a number
     if (year) {
+      year = Number(year);
+    }
+
+    // use the year to generate date range
+    if (year) {
+      // for simplicity, we'll assume that the user posted
+      // in the same timezone that they are using this
+      // app from
       minDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime();
       maxDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime();
     }
 
     button.onclick = function () {
-      getImagesForRange(minDate, maxDate);
+      getImagesForRange(minDate, maxDate).then(function () {
+        console.log('image generated');
+      }).catch(function (err) {
+        console.error(err);
+      });
     };
   });
 
