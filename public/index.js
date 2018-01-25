@@ -69,6 +69,7 @@ window.addEventListener('load', function () {
 
   var loginButton = document.querySelector('#login');
   var getImagesButton = document.querySelector('#get-images');
+  var quickSelectButtons = document.querySelectorAll('.get-images');
   var imagesDiv = document.querySelector('#images');
 
   loginButton.onclick = function () {
@@ -209,7 +210,15 @@ window.addEventListener('load', function () {
     });
   }
 
-  getImagesButton.onclick = function () {
+  function getImagesForRange(minDate, maxDate) {
+    if (!minDate) {
+      minDate = 1;
+    }
+
+    if (!maxDate) {
+      maxDate = Date.now();
+    }
+
     var allPosts = [];
 
     api.photos()
@@ -251,6 +260,20 @@ window.addEventListener('load', function () {
     }).catch(function (err) {
       console.error(err);
     });
-  };
+  }
+
+  [].forEach.call(quickSelectButtons, function (button) {
+    var year = button.getAttribute('data-year');
+    var minDate, maxDate;
+
+    if (year) {
+      minDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime();
+      maxDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime();
+    }
+
+    button.onclick = function () {
+      getImagesForRange(minDate, maxDate);
+    };
+  });
 
 });
