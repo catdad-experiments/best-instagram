@@ -265,6 +265,7 @@ window.addEventListener('load', function () {
 
   [].forEach.call(quickRangeButtons, function (button) {
     var year = button.getAttribute('data-year');
+    var days = button.getAttribute('data-days');
     var minDate, maxDate;
 
     // convert to a number
@@ -279,6 +280,15 @@ window.addEventListener('load', function () {
       // app from
       minDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime();
       maxDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime();
+    }
+
+    if (days) {
+      days = Number(days);
+    }
+
+    if (days) {
+      minDate = Date.now() - (846e5 * days);
+      maxDate = Date.now();
     }
 
     button.onclick = function () {
