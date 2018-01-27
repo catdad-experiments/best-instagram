@@ -50,7 +50,6 @@ button {
 
   border: none;
   outline: none;
-  padding: 0.7rem;
   border-radius: 3px;
   margin: 6px 3px;
   min-width: 10rem;
@@ -61,7 +60,7 @@ button {
 }
 
 button:focus {
-  background: #ac234c;
+  background: #d40019;
 }
 
 .hide, .flow.hide {
