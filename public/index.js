@@ -68,7 +68,7 @@ window.addEventListener('load', function () {
   };
 
   var loginButton = document.querySelector('#login');
-  var getImagesButton = document.querySelector('#get-images');
+  var quickRangeButtons = document.querySelectorAll('.get-images');
   var imagesDiv = document.querySelector('#images');
 
   loginButton.onclick = function () {
@@ -154,7 +154,7 @@ window.addEventListener('load', function () {
   function renderToCanvas(sortedPosts) {
     // do nothing, for now, if we don't have enough posts
     if (sortedPosts.length < 9) {
-      return Promise.resolve(null);
+      return Promise.reject(new Error('not enough posts'));
     }
 
     return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
@@ -209,10 +209,20 @@ window.addEventListener('load', function () {
     });
   }
 
-  getImagesButton.onclick = function () {
-    var allPosts = [];
+  function getImagesForRange(minDate, maxDate) {
+    if (!minDate) {
+      minDate = 1;
+    }
 
-    api.photos()
+    if (!maxDate) {
+      maxDate = Date.now();
+    }
+
+    var allPosts = [];
+    var min = new Date(minDate);
+    var max = new Date(maxDate);
+
+    return api.photos()
     .then(function handleBody(posts) {
       if (!posts.length) {
         return;
@@ -222,7 +232,9 @@ window.addEventListener('load', function () {
 
       // keep track of all posts we've retrieved
       // and sort them
-      allPosts = allPosts.concat(summaries);
+      allPosts = allPosts.concat(summaries.filter(function (post) {
+        return post.datetime > min && post.datetime < max;
+      }));
       allPosts.sort(function (a, b) {
         // most likes first
         return b.likes - a.likes;
@@ -248,9 +260,44 @@ window.addEventListener('load', function () {
         // some point, but oh well.
         return api.photos(lastPost.id).then(handleBody);
       });
-    }).catch(function (err) {
-      console.error(err);
     });
-  };
+  }
+
+  [].forEach.call(quickRangeButtons, function (button) {
+    var year = button.getAttribute('data-year');
+    var days = button.getAttribute('data-days');
+    var minDate, maxDate;
+
+    // convert to a number
+    if (year) {
+      year = Number(year);
+    }
+
+    // use the year to generate date range
+    if (year) {
+      // for simplicity, we'll assume that the user posted
+      // in the same timezone that they are using this
+      // app from
+      minDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime();
+      maxDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime();
+    }
+
+    if (days) {
+      days = Number(days);
+    }
+
+    if (days) {
+      minDate = Date.now() - (846e5 * days);
+      maxDate = Date.now();
+    }
+
+    button.onclick = function () {
+      getImagesForRange(minDate, maxDate).then(function () {
+        console.log('image generated');
+      }).catch(function (err) {
+        console.error(err);
+      });
+    };
+  });
 
 });

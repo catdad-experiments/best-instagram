@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Best Instagram</title>
-  <meta name="theme-color" content="#cb1e52">
+  <meta name="theme-color" content="#cc0128">
 
   <link rel="stylesheet" href="index.css">
   <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
@@ -39,7 +39,11 @@
     <div id="image-flow" class="flow hide">
       <div class="flex-center">
         <div class="controls">
-          <button id="get-images">Get Images</button>
+          <div>Get best posts for a range:</div>
+          <button class="get-images" data-days="30">last 30 days</button>
+          <button class="get-images" data-year="2018">2018</button>
+          <button class="get-images" data-year="2017">2017</button>
+          <button class="get-images">all time best</button>
         </div>
         <div id="images" class="hero"></div>
       </div>
