@@ -1,10 +1,7 @@
 /* jshint browser: true, devel: true */
-/* globals request, Promise, TOKEN */
+/* globals request, Promise, TOKEN, CLIENT_ID, REDIRECT_URI */
 
 window.addEventListener('load', function () {
-  var CLIENT_ID = '1cce8de545d54a14bde4272118af4b54';
-  var REDIRECT_URI = encodeURIComponent('https://visualstupid.now.sh/instagram/login');
-
   function renderMustache(str, obj) {
     return Object.keys(obj).reduce(function (memo, key) {
       var value = obj[key];
