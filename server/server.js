@@ -26,7 +26,13 @@ var renderIndex = (function () {
     .split('<!--API TOKEN-->');
 
   return function render(token) {
-    return `${indexHtml[0]}<script>var TOKEN="${token}";</script>${indexHtml[1]}`;
+    return `${indexHtml[0]}
+<script>
+  var TOKEN = '${token}';
+  var CLIENT_ID = '${apiKey}'
+  var REDIRECT_URI = encodeURIComponent('${redirectUri}');
+</script>
+${indexHtml[1]}`;
   };
 }());
 
