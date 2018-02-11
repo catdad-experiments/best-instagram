@@ -71,6 +71,50 @@ window.addEventListener('load', function () {
   var quickRangeButtons = document.querySelectorAll('.get-images');
   var imagesDiv = document.querySelector('#images');
 
+  var message = (function () {
+    var messageDiv = document.querySelector('#message');
+    var hideTimeout;
+
+    function cancelTimeout() {
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+    }
+
+    function clear() {
+      cancelTimeout();
+      messageDiv.classList.remove('show');
+    }
+
+    function autoClear(time) {
+      cancelTimeout();
+      hideTimeout = setTimeout(clear, time || 4000);
+    }
+
+    function show(str, isError) {
+      if (isError) {
+        messageDiv.classList.add('error');
+      } else {
+        messageDiv.classList.remove('error');
+      }
+
+      messageDiv.innerHTML = '';
+      messageDiv.appendChild(document.createTextNode(str));
+
+      messageDiv.classList.add('show');
+
+      autoClear();
+    }
+
+    return {
+      info: show,
+      error: function (err) {
+        show(String(err), true);
+      }
+    };
+  }());
+
   loginButton.onclick = function () {
     loginRedirect();
   };
@@ -293,9 +337,9 @@ window.addEventListener('load', function () {
 
     button.onclick = function () {
       getImagesForRange(minDate, maxDate).then(function () {
-        console.log('image generated');
+        message.info('all done!');
       }).catch(function (err) {
-        console.error(err);
+        message.error(err);
       });
     };
   });

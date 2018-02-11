@@ -9,6 +9,7 @@ html, body {
 
   background-color: #e0003e;
   background-image: linear-gradient(-100deg,#b900b6,#f50000,#ffd521);
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
@@ -92,12 +93,13 @@ button:focus {
 
 .container {
   display: flex;
+  flex-direction: column;
 
   width: 100%;
   flex-grow: 1;
-  padding: 1rem 0;
   margin: 0 auto;
   text-align: center;
+  overflow: hidden;
 
   border-radius: 12px;
 
@@ -109,6 +111,7 @@ button:focus {
   display: flex;
   flex-direction: column;
   flex-grow: 100;
+  padding: 1rem 0;
 }
 
 .flex-center {
@@ -116,6 +119,29 @@ button:focus {
   flex-direction: column;
   margin: auto;
   width: 100%;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+
+  padding: 0px;
+  text-align: center;
+  background: #228d09;
+  max-height: 0;
+  font-weight: bold;
+  overflow: hidden;
+
+  transition: max-height 200ms ease, padding 200ms ease;
+}
+
+.message.error {
+  background: #ef0012;
+}
+
+.message.show {
+  padding: 20px;
+  max-height: 4rem;
 }
 
 .controls {
