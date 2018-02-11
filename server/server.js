@@ -31,7 +31,8 @@ var renderIndex = (function () {
   var TOKEN = '${token}';
   var CLIENT_ID = '${apiKey}'
   var REDIRECT_URI = encodeURIComponent('${redirectUri}');
-</script>${indexHtml[1]}`;
+</script>
+${indexHtml[1]}`;
   };
 }());
 
