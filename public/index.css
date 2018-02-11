@@ -127,7 +127,8 @@ button:focus {
 
   padding: 0px;
   text-align: center;
-  background: #228d09;
+  color: #f4f4f4;
+  background: #44a252;
   max-height: 0;
   font-weight: bold;
   overflow: hidden;
@@ -136,7 +137,7 @@ button:focus {
 }
 
 .message.error {
-  background: #ef0012;
+  background: #d64c4f;
 }
 
 .message.show {
