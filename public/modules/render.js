@@ -1,25 +1,11 @@
-/* jshint browser: true, devel: true */
+/* jshint browser: true */
 /* globals request, Promise, TOKEN, CLIENT_ID, REDIRECT_URI */
 
-window.addEventListener('load', function () {
-  function renderMustache(str, obj) {
-    return Object.keys(obj).reduce(function (memo, key) {
-      var value = obj[key];
-      var regex = new RegExp('\\$\\{' + key + '\\}', 'g');
+(function (register) {
+  var NAME = 'render';
+  var renderMustache;
 
-      return memo.replace(regex, value);
-    }, str);
-  }
-
-  function loginRedirect() {
-    window.location.href = renderMustache(
-      'https://api.instagram.com/oauth/authorize/?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code',
-      {
-        clientId: CLIENT_ID,
-        redirectUri: REDIRECT_URI
-      }
-    );
-  }
+  var imagesDiv = document.querySelector('#images');
 
   var api = {
     media: function (sinceId) {
@@ -63,78 +49,6 @@ window.addEventListener('load', function () {
       });
     }
   };
-
-  var loginButton = document.querySelector('#login');
-  var quickRangeButtons = document.querySelectorAll('.get-images');
-  var imagesDiv = document.querySelector('#images');
-
-  var message = (function () {
-    var messageDiv = document.querySelector('#message');
-    var hideTimeout;
-
-    function cancelTimeout() {
-      if (hideTimeout) {
-        clearTimeout(hideTimeout);
-        hideTimeout = null;
-      }
-    }
-
-    function clear() {
-      cancelTimeout();
-      messageDiv.classList.remove('show');
-    }
-
-    function autoClear(time) {
-      cancelTimeout();
-      hideTimeout = setTimeout(clear, time || 4000);
-    }
-
-    function show(str, isError) {
-      if (isError) {
-        messageDiv.classList.add('error');
-      } else {
-        messageDiv.classList.remove('error');
-      }
-
-      messageDiv.innerHTML = '';
-      messageDiv.appendChild(document.createTextNode(str));
-
-      messageDiv.classList.add('show');
-
-      autoClear();
-    }
-
-    return {
-      info: show,
-      error: function (err) {
-        show(String(err), true);
-      }
-    };
-  }());
-
-  loginButton.onclick = function () {
-    loginRedirect();
-  };
-
-  // get an image object with the source already loaded
-  function getLoadedImage(src) {
-    return new Promise(function (resolve, reject) {
-      var img = new Image();
-      // allows us to get these off of the Instagram
-      // servers directly
-      img.setAttribute('crossOrigin', 'Anonymous');
-
-      img.onload = function () {
-        resolve(img);
-      };
-
-      img.onerror = function (err) {
-        reject(new Error('could not load the image'));
-      };
-
-      img.src = src;
-    });
-  }
 
   // add some helpers to a post summary object
   function createPostObject(post) {
@@ -187,6 +101,26 @@ window.addEventListener('load', function () {
         imageUrl: post.images.standard_resolution.url,
         datetime: new Date(post.created_time * 1000)
       });
+    });
+  }
+
+  // get an image object with the source already loaded
+  function getLoadedImage(src) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      // allows us to get these off of the Instagram
+      // servers directly
+      img.setAttribute('crossOrigin', 'Anonymous');
+
+      img.onload = function () {
+        resolve(img);
+      };
+
+      img.onerror = function (err) {
+        reject(new Error('could not load the image'));
+      };
+
+      img.src = src;
     });
   }
 
@@ -304,41 +238,21 @@ window.addEventListener('load', function () {
     });
   }
 
-  [].forEach.call(quickRangeButtons, function (button) {
-    var year = button.getAttribute('data-year');
-    var days = button.getAttribute('data-days');
-    var minDate, maxDate;
+  register(NAME, function () {
+    var context = this;
+    var message = context.message;
+    var events = context.events;
 
-    // convert to a number
-    if (year) {
-      year = Number(year);
-    }
+    renderMustache = context.renderMustache;
 
-    // use the year to generate date range
-    if (year) {
-      // for simplicity, we'll assume that the user posted
-      // in the same timezone that they are using this
-      // app from
-      minDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime();
-      maxDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime();
-    }
-
-    if (days) {
-      days = Number(days);
-    }
-
-    if (days) {
-      minDate = Date.now() - (846e5 * days);
-      maxDate = Date.now();
-    }
-
-    button.onclick = function () {
-      getImagesForRange(minDate, maxDate).then(function () {
+    events.on('create-render', function (opts) {
+      getImagesForRange(opts.min, opts.max).then(function () {
         message.info('all done!');
       }).catch(function (err) {
         message.error(err);
       });
-    };
-  });
+    });
 
-});
+    return function destroy() {};
+  });
+}(window.registerModule));
