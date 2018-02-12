@@ -82,6 +82,16 @@ window.addEventListener('load', function () {
   // things now
   // ------------------------------------------------
 
+  // some utils, for now
+  function renderMustache(str, obj) {
+    return Object.keys(obj).reduce(function (memo, key) {
+      var value = obj[key];
+      var regex = new RegExp('\\$\\{' + key + '\\}', 'g');
+
+      return memo.replace(regex, value);
+    }, str);
+  }
+
   // super simple module loader, because I don't want to
   // deal with build for this demo
   function loadScript(name) {
@@ -104,7 +114,8 @@ window.addEventListener('load', function () {
 
   var context = {
     onError: onError,
-    message: message
+    message: message,
+    renderMustache: renderMustache
   };
 
   var modules = {};
@@ -118,12 +129,23 @@ window.addEventListener('load', function () {
   // load all the modules from the server directly
   Promise.all([
     loadScript('modules/event-emitter.js'),
+    loadScript('modules/login-controls.js'),
+    loadScript('modules/render-controls.js'),
+    loadScript('modules/render.js'),
   ]).then(function () {
     // set up a global event emitter
     context.events = modules['event-emitter']();
 
+    var loginControlsDestroy = modules['login-controls']();
+    var renderControlsDestroy = modules['render-controls']();
+    var renderDestroy = modules['render']();
+
     context.events.on('error', function (err) {
       onError(err);
+
+      loginControlsDestroy();
+      renderControlsDestroy();
+      renderDestroy();
     });
 
     // start the app
