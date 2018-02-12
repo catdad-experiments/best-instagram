@@ -35,10 +35,16 @@ header, footer {
 }
 
 footer {
+  position: relative;
   height: 2rem;
   padding: 6px;
   text-align: center;
   font-size: 0.8rem;
+}
+
+footer a {
+  text-decoration: none;
+  color: #f4f4f4;
 }
 
 footer span {
@@ -89,6 +95,7 @@ button:focus {
   display: block;
   /* clear the footer */
   height: 2rem;
+  pointer-events: none;
 }
 
 .container {
