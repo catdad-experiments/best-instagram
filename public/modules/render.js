@@ -3,7 +3,6 @@
 
 (function (register) {
   var NAME = 'render';
-  var renderMustache;
 
   var imagesDiv = document.querySelector('#images');
 
@@ -31,11 +30,6 @@
   // take the list of posts and render them to the page,
   // for the user's delight
   function renderToCanvas(sortedPosts) {
-    // do nothing, for now, if we don't have enough posts
-    if (sortedPosts.length < 9) {
-      return Promise.reject(new Error('not enough posts'));
-    }
-
     return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
       // this is a bit round-about, but we want to get a base64 string,
       // so that we can use that to create a clean image to use
@@ -89,33 +83,45 @@
   }
 
   function renderImageStream(stream) {
-    var allPosts = [];
+    return new Promise(function (resolve, reject) {
+      var allPosts = [];
 
-    stream.on('data', function (posts) {
-      // keep track of all posts we've retrieved
-      // and sort them
-      allPosts = allPosts.concat(posts);
-      allPosts.sort(function (a, b) {
-        // most likes first
-        return b.likes - a.likes;
-      });
-    });
-
-    stream.on('end', function () {
-      // get a rendered dom element with the image
-      return renderToCanvas(allPosts).then(function (canvas) {
-        if (!canvas) {
-          return;
-        }
-
-        // get the data from the canvas and render it as an
-        // image element
-        return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
-          imagesDiv.innerHTML = '';
-          imagesDiv.appendChild(img);
+      stream.on('data', function (posts) {
+        // keep track of all posts we've retrieved
+        // and sort them
+        allPosts = allPosts.concat(posts);
+        allPosts.sort(function (a, b) {
+          // most likes first
+          return b.likes - a.likes;
         });
       });
+
+      stream.on('end', function () {
+        // do nothing, for now, if we don't have enough posts
+        if (allPosts.length < 9) {
+          return reject(new Error('not enough posts'));
+        }
+
+        // get a rendered dom element with the image
+        renderToCanvas(allPosts).then(function (canvas) {
+          if (!canvas) {
+            return;
+          }
+
+          // get the data from the canvas and render it as an
+          // image element
+          return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
+            imagesDiv.innerHTML = '';
+            imagesDiv.appendChild(img);
+          });
+        }).then(resolve).catch(reject);
+      });
+
+      stream.on('error', function (err) {
+        reject(err);
+      });
     });
+
   }
 
   register(NAME, function () {
@@ -123,14 +129,14 @@
     var message = context.message;
     var events = context.events;
 
-    renderMustache = context.renderMustache;
-
     events.on('create-render', function (opts) {
       var stream = context.getInstagramPosts(opts);
 
-      renderImageStream(stream);
-
-      stream.on('error', function (err) {
+      renderImageStream(stream)
+      .then(function () {
+        message.info('all done!');
+      })
+      .catch(function (err) {
         message.error(err);
       });
     });
