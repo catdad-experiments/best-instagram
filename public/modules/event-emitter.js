@@ -3,7 +3,7 @@
 (function (register) {
   var NAME = 'event-emitter';
 
-  register(NAME, function () {
+  function eventEmitter() {
     var events = {};
     var api = {};
 
@@ -62,5 +62,13 @@
     };
 
     return api;
+  }
+
+  register(NAME, function () {
+    var context = this;
+
+    context.newEmitter = eventEmitter;
+
+    return eventEmitter();
   });
 }(window.registerModule));
