@@ -42,6 +42,8 @@
 
       // this is the size that instagram serves (as the width)
       var size = 640;
+      // destination size dimension
+      var dim = size;
       canvas.width = size * 3;
       canvas.height = size * 3;
 
@@ -60,16 +62,18 @@
         // instagram always serves images with 640 width and
         // variable height
         if (h > w) {
+          // portrait photo
           sy = (h - w) / 2;
+          dim = w;
         }
 
-        // just in case they reverse the above in the future,
-        // handle 640 height with variable width too
-        if (w > h) {
+        if (h < w) {
+          // landscape photo
           sx = (w - h) / 2;
+          dim = h;
         }
 
-        context.drawImage(img, sx, sy, size, size, dx, dy, size, size);
+        context.drawImage(img, sx, sy, dim, dim, dx, dy, size, size);
 
         // when we reach the end of the row,
         // update to use the next row
