@@ -129,6 +129,7 @@ window.addEventListener('load', function () {
   // load all the modules from the server directly
   Promise.all([
     loadScript('modules/event-emitter.js'),
+    loadScript('modules/instagram-api.js'),
     loadScript('modules/login-controls.js'),
     loadScript('modules/render-controls.js'),
     loadScript('modules/render.js'),
@@ -136,6 +137,7 @@ window.addEventListener('load', function () {
     // set up a global event emitter
     context.events = modules['event-emitter']();
 
+    var instagramApiDestroy = modules['instagram-api']();
     var loginControlsDestroy = modules['login-controls']();
     var renderControlsDestroy = modules['render-controls']();
     var renderDestroy = modules['render']();
@@ -143,6 +145,7 @@ window.addEventListener('load', function () {
     context.events.on('error', function (err) {
       onError(err);
 
+      instagramApiDestroy();
       loginControlsDestroy();
       renderControlsDestroy();
       renderDestroy();

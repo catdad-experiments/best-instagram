@@ -7,103 +7,7 @@
 
   var imagesDiv = document.querySelector('#images');
 
-  var api = {
-    media: function (sinceId) {
-      return new Promise(function (resolve, reject) {
-        var url = renderMustache(
-          'https://api.instagram.com/v1/users/self/media/recent/?access_token=${token}',
-          {
-            token: TOKEN
-          }
-        );
-
-        if (sinceId) {
-          url += '&max_id=' + sinceId;
-        }
-
-        request.jsonp({
-          url: url,
-          unknownErrors: true
-        }, function (err, body) {
-          if (err) {
-            return reject(err);
-          }
-
-          if (body.meta && body.meta.code !== 200) {
-            return reject(new Error('unknown meta code ' + body.meta.code));
-          }
-
-          return resolve(body);
-        });
-      });
-    },
-    photos: function (sinceId) {
-      return api.media(sinceId).then(function (body) {
-        if (body.data.length === 0) {
-          return [];
-        }
-
-        return body.data.filter(function (post) {
-          return post.type === 'image';
-        });
-      });
-    }
-  };
-
-  // add some helpers to a post summary object
-  function createPostObject(post) {
-    var base64Str;
-
-    function getBase64() {
-      if (base64Str) {
-        return Promise.resolve(base64Str);
-      }
-
-      return getLoadedImage(post.imageUrl).then(function (img) {
-        var canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-
-        canvas.getContext('2d').drawImage(img, 0, 0);
-
-        base64Str = canvas.toDataURL('image/png');
-
-        return Promise.resolve(base64Str);
-      });
-    }
-
-    function discardBase64() {
-      base64Str = null;
-    }
-
-    function hasBase64() {
-      return !!base64Str;
-    }
-
-    return Object.assign({
-      getBase64: getBase64,
-      discardBase64: discardBase64,
-      hasBase64: hasBase64
-    }, post);
-  }
-
-  // create friendly summary objects for all posts,
-  // with only props and util I actually care about
-  function summarize(posts) {
-    return posts.map(function (post) {
-      // add helper methods in a separate function,
-      // so that we do not keep the whole posts array
-      // in scope memory
-      return createPostObject({
-        id: post.id,
-        likes: post.likes.count,
-        comments: post.comments.count,
-        imageUrl: post.images.standard_resolution.url,
-        datetime: new Date(post.created_time * 1000)
-      });
-    });
-  }
-
+  // TODO make this a helper
   // get an image object with the source already loaded
   function getLoadedImage(src) {
     return new Promise(function (resolve, reject) {
@@ -184,37 +88,20 @@
     });
   }
 
-  function getImagesForRange(minDate, maxDate) {
-    if (!minDate) {
-      minDate = 1;
-    }
-
-    if (!maxDate) {
-      maxDate = Date.now();
-    }
-
+  function renderImageStream(stream) {
     var allPosts = [];
-    var min = new Date(minDate);
-    var max = new Date(maxDate);
 
-    return api.photos()
-    .then(function handleBody(posts) {
-      if (!posts.length) {
-        return;
-      }
-
-      var summaries = summarize(posts);
-
+    stream.on('data', function (posts) {
       // keep track of all posts we've retrieved
       // and sort them
-      allPosts = allPosts.concat(summaries.filter(function (post) {
-        return post.datetime > min && post.datetime < max;
-      }));
+      allPosts = allPosts.concat(posts);
       allPosts.sort(function (a, b) {
         // most likes first
         return b.likes - a.likes;
       });
+    });
 
+    stream.on('end', function () {
       // get a rendered dom element with the image
       return renderToCanvas(allPosts).then(function (canvas) {
         if (!canvas) {
@@ -227,13 +114,6 @@
           imagesDiv.innerHTML = '';
           imagesDiv.appendChild(img);
         });
-      }).then(function () {
-        var lastPost = summaries[summaries.length - 1];
-
-        // Instagram only allows ~6 months of photos in recent,
-        // so just get them all... this could be a bad idea at
-        // some point, but oh well.
-        return api.photos(lastPost.id).then(handleBody);
       });
     });
   }
@@ -246,9 +126,11 @@
     renderMustache = context.renderMustache;
 
     events.on('create-render', function (opts) {
-      getImagesForRange(opts.min, opts.max).then(function () {
-        message.info('all done!');
-      }).catch(function (err) {
+      var stream = context.getInstagramPosts(opts);
+
+      renderImageStream(stream);
+
+      stream.on('error', function (err) {
         message.error(err);
       });
     });
