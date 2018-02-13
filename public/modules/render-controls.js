@@ -13,27 +13,27 @@
     var flow = document.querySelector('#image-flow');
     var controls = flow.querySelector('.controls');
 
-    function yearRange(year) {
-      // for simplicity, we'll assume that the user posted
-      // in the same timezone that they are using this
-      // app from
-      return {
-        min: (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime(),
-        max: (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime()
-      };
-    }
-
-    function dayRange(days) {
-      return {
-        min: Date.now() - (846e5 * days),
-        max: Date.now()
-      };
-    }
-
     function onClick(opts) {
       return function (ev) {
         events.emit('create-render', opts);
       };
+    }
+
+    function yearRange(year) {
+      // for simplicity, we'll assume that the user posted
+      // in the same timezone that they are using this
+      // app from
+      return onClick({
+        min: (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime(),
+        max: (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime()
+      });
+    }
+
+    function dayRange(days) {
+      return onClick({
+        min: Date.now() - (846e5 * days),
+        max: Date.now()
+      });
     }
 
     var instruction = dom.elem('div', { text: 'Get best posts for:'});
@@ -42,19 +42,19 @@
     var days30 = dom.elem('button', {
       text: 'last 30 days',
       className: buttonClass,
-      onClick: onClick(dayRange(30))
+      onClick: dayRange(30)
     });
 
     var year2018 = dom.elem('button', {
       text: '2018',
       className: buttonClass,
-      onClick: onClick(yearRange(2018))
+      onClick: yearRange(2018)
     });
 
     var year2017 = dom.elem('button', {
       text: '2017',
       className: buttonClass,
-      onClick: onClick(yearRange(2017))
+      onClick: yearRange(2017)
     });
 
     var allTime = dom.elem('button', {
