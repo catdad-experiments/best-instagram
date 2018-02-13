@@ -164,6 +164,7 @@
         message.info('all done!');
       })
       .catch(function (err) {
+        dom.empty(imagesDiv);
         message.error(err);
       });
     });
