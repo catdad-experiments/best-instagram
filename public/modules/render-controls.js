@@ -13,37 +13,26 @@
     var flow = document.querySelector('#image-flow');
     var controls = flow.querySelector('.controls');
 
-    function onClick(year, days) {
-      var minDate, maxDate;
+    function yearRange(year) {
+      // for simplicity, we'll assume that the user posted
+      // in the same timezone that they are using this
+      // app from
+      return {
+        min: (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime(),
+        max: (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime()
+      };
+    }
 
-      // convert to a number
-      if (year) {
-        year = Number(year);
-      }
+    function dayRange(days) {
+      return {
+        min: Date.now() - (846e5 * days),
+        max: Date.now()
+      };
+    }
 
-      // use the year to generate date range
-      if (year) {
-        // for simplicity, we'll assume that the user posted
-        // in the same timezone that they are using this
-        // app from
-        minDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year }))).getTime();
-        maxDate = (new Date(renderMustache('${year}-01-01T00:00:00', { year: year + 1 }))).getTime();
-      }
-
-      if (days) {
-        days = Number(days);
-      }
-
-      if (days) {
-        minDate = Date.now() - (846e5 * days);
-        maxDate = Date.now();
-      }
-
+    function onClick(opts) {
       return function (ev) {
-        events.emit('create-render', {
-          min: minDate,
-          max: maxDate
-        });
+        events.emit('create-render', opts);
       };
     }
 
@@ -53,25 +42,25 @@
     var days30 = dom.elem('button', {
       text: 'last 30 days',
       className: buttonClass,
-      onClick: onClick(null, 30)
+      onClick: onClick(dayRange(30))
     });
 
     var year2018 = dom.elem('button', {
       text: '2018',
       className: buttonClass,
-      onClick: onClick(2018, null)
+      onClick: onClick(yearRange(2018))
     });
 
     var year2017 = dom.elem('button', {
       text: '2017',
       className: buttonClass,
-      onClick: onClick(2017, null)
+      onClick: onClick(yearRange(2017))
     });
 
     var allTime = dom.elem('button', {
       text: 'all time best',
       className: buttonClass,
-      onClick: onClick()
+      onClick: onClick({})
     });
 
     controls.appendChild(instruction);
