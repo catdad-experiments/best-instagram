@@ -115,24 +115,6 @@
     });
   }
 
-  function renderImageStream(stream) {
-    return collectBestPosts(stream).then(function (allPosts) {
-      // get a rendered dom element with the image
-      return renderToCanvas(allPosts).then(function (canvas) {
-        if (!canvas) {
-          return;
-        }
-
-        // get the data from the canvas and render it as an
-        // image element
-        return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
-          imagesDiv.innerHTML = '';
-          imagesDiv.appendChild(img);
-        });
-      });
-    });
-  }
-
   register(NAME, function () {
     var context = this;
     var dom = context.dom;
@@ -142,6 +124,24 @@
     function progress(text) {
       dom.empty(imagesDiv);
       dom.append(imagesDiv, dom.text(text));
+    }
+
+    function renderImageStream(stream) {
+      return collectBestPosts(stream).then(function (allPosts) {
+        // get a rendered dom element with the image
+        return renderToCanvas(allPosts).then(function (canvas) {
+          if (!canvas) {
+            return;
+          }
+
+          // get the data from the canvas and render it as an
+          // image element
+          return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
+            dom.empty(imagesDiv);
+            dom.append(imagesDiv, img);
+          });
+        });
+      });
     }
 
     events.on('create-render', function (opts) {
