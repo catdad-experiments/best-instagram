@@ -27,6 +27,14 @@
     return parent;
   }
 
+  function empty(parent) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+
+    return parent;
+  }
+
   register(NAME, function () {
     var context = this;
 
@@ -54,8 +62,10 @@
     }
 
     context.dom = {
+      text: text,
       elem: elem,
-      append: append
+      append: append,
+      empty: empty
     };
 
     return function destroy() {};
