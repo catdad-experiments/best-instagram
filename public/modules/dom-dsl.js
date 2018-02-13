@@ -19,12 +19,16 @@
     return ensureArray(children).reduce(function (fragment, child) {
       fragment.appendChild(child);
       return fragment;
-    }, document.createDocumentFragment);
+    }, document.createDocumentFragment());
+  }
+
+  function append(parent, children) {
+    parent.appendChild(childrenFragment(children));
+    return parent;
   }
 
   register(NAME, function () {
     var context = this;
-
 
     function elem(type, options){
       var opts = ensureObject(options);
@@ -39,7 +43,7 @@
       }
 
       if (opts.children) {
-        el.appendChild(childrenFragment(opts.children));
+        append(el, opts.children);
       }
 
       if (opts.onClick) {
@@ -50,7 +54,8 @@
     }
 
     context.dom = {
-      elem: elem
+      elem: elem,
+      append: append
     };
 
     return function destroy() {};
