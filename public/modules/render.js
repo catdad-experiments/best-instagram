@@ -134,20 +134,19 @@
     var message = context.message;
     var events = context.events;
 
+    function progress(text) {
+      dom.empty(imagesDiv);
+      dom.append(imagesDiv, dom.text(text));
+    }
+
     events.on('create-render', function (opts) {
       var stream = context.getInstagramPosts(opts);
       var totalCount = 0;
-
-      function progress(text) {
-        dom.empty(imagesDiv);
-        dom.append(imagesDiv, dom.text(text));
-      }
 
       progress('Fetching posts...');
 
       stream.on('data', function (posts) {
         totalCount += posts.length;
-
         progress('Fetched ' + totalCount + ' posts...');
       });
 
