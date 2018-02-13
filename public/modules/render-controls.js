@@ -5,15 +5,15 @@
 
   register(NAME, function () {
     var context = this;
+    var dom = context.dom;
     var message = context.message;
     var renderMustache = context.renderMustache;
     var events = context.events;
 
-    var quickRangeButtons = document.querySelectorAll('.get-images');
+    var flow = document.querySelector('#image-flow');
+    var controls = flow.querySelector('.controls');
 
-    [].forEach.call(quickRangeButtons, function (button) {
-      var year = button.getAttribute('data-year');
-      var days = button.getAttribute('data-days');
+    function onClick(year, days) {
       var minDate, maxDate;
 
       // convert to a number
@@ -39,13 +39,46 @@
         maxDate = Date.now();
       }
 
-      button.onclick = function () {
+      return function (ev) {
         events.emit('create-render', {
           min: minDate,
           max: maxDate
         });
       };
+    }
+
+    var instruction = dom.elem('div', { text: 'Get best posts for:'});
+    var buttonClass = 'get-images';
+
+    var days30 = dom.elem('button', {
+      text: 'last 30 days',
+      className: buttonClass,
+      onClick: onClick(null, 30)
     });
+
+    var year2018 = dom.elem('button', {
+      text: '2018',
+      className: buttonClass,
+      onClick: onClick(2018, null)
+    });
+
+    var year2017 = dom.elem('button', {
+      text: '2017',
+      className: buttonClass,
+      onClick: onClick(2017, null)
+    });
+
+    var allTime = dom.elem('button', {
+      text: 'all time best',
+      className: buttonClass,
+      onClick: onClick()
+    });
+
+    controls.appendChild(instruction);
+    controls.appendChild(days30);
+    controls.appendChild(year2018);
+    controls.appendChild(year2017);
+    controls.appendChild(allTime);
 
     return function destroy() {};
   });
