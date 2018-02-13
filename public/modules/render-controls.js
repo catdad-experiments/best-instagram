@@ -63,11 +63,13 @@
       onClick: onClick({})
     });
 
-    controls.appendChild(instruction);
-    controls.appendChild(days30);
-    controls.appendChild(year2018);
-    controls.appendChild(year2017);
-    controls.appendChild(allTime);
+    dom.append(controls, [
+      instruction,
+      days30,
+      year2018,
+      year2017,
+      allTime
+    ]);
 
     return function destroy() {};
   });
