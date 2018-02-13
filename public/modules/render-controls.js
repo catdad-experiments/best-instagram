@@ -14,7 +14,7 @@
     var controls = flow.querySelector('.controls');
 
     function onClick(opts) {
-      return function (ev) {
+      return function onClickHandler(ev) {
         events.emit('create-render', opts);
       };
     }
