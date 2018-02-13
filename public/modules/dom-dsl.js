@@ -41,6 +41,12 @@
       if (opts.children) {
         el.appendChild(childrenFragment(opts.children));
       }
+
+      if (opts.onClick) {
+        el.addEventListener('click', opts.onClick);
+      }
+
+      return el;
     }
 
     context.dom = {
