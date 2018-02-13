@@ -30,7 +30,7 @@
   // take the list of posts and render them to the page,
   // for the user's delight
   function renderToCanvas(sortedPosts) {
-    return Promise.all(sortedPosts.slice(0, 9).map(function (post) {
+    return Promise.all(sortedPosts.map(function (post) {
       // this is a bit round-about, but we want to get a base64 string,
       // so that we can use that to create a clean image to use
       // in the collage canvas
@@ -86,7 +86,7 @@
     });
   }
 
-  function renderImageStream(stream) {
+  function collectBestPosts(stream) {
     return new Promise(function (resolve, reject) {
       var allPosts = [];
 
@@ -106,26 +106,13 @@
           return reject(new Error('not enough posts'));
         }
 
-        // get a rendered dom element with the image
-        renderToCanvas(allPosts).then(function (canvas) {
-          if (!canvas) {
-            return;
-          }
-
-          // get the data from the canvas and render it as an
-          // image element
-          return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
-            imagesDiv.innerHTML = '';
-            imagesDiv.appendChild(img);
-          });
-        }).then(resolve).catch(reject);
+        resolve(allPosts.slice(0, 9));
       });
 
       stream.on('error', function (err) {
         reject(err);
       });
     });
-
   }
 
   register(NAME, function () {
@@ -137,6 +124,24 @@
     function progress(text) {
       dom.empty(imagesDiv);
       dom.append(imagesDiv, dom.text(text));
+    }
+
+    function renderImageStream(stream) {
+      return collectBestPosts(stream).then(function (allPosts) {
+        // get a rendered dom element with the image
+        return renderToCanvas(allPosts).then(function (canvas) {
+          if (!canvas) {
+            return;
+          }
+
+          // get the data from the canvas and render it as an
+          // image element
+          return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
+            dom.empty(imagesDiv);
+            dom.append(imagesDiv, img);
+          });
+        });
+      });
     }
 
     events.on('create-render', function (opts) {
