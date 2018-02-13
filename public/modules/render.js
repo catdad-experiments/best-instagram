@@ -130,11 +130,30 @@
 
   register(NAME, function () {
     var context = this;
+    var dom = context.dom;
     var message = context.message;
     var events = context.events;
 
     events.on('create-render', function (opts) {
       var stream = context.getInstagramPosts(opts);
+      var totalCount = 0;
+
+      function progress(text) {
+        dom.empty(imagesDiv);
+        dom.append(imagesDiv, dom.text(text));
+      }
+
+      progress('Fetching posts...');
+
+      stream.on('data', function (posts) {
+        totalCount += posts.length;
+
+        progress('Fetched ' + totalCount + ' posts...');
+      });
+
+      stream.on('end', function () {
+        progress('Almost done...');
+      });
 
       renderImageStream(stream)
       .then(function () {
