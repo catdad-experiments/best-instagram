@@ -68,7 +68,13 @@ app.get('/instagram/login', function (req, res) {
   var code = req.query.code;
 
   if (!code) {
-    return writeError(res, 'Error: no code received in redirect\n' + JSON.stringify(req.query));
+    console.log('no login code received', req.query);
+
+    res.writeHead(302, {
+      location: getRootUrl(req) + '?error=true'
+    });
+    res.end();
+    return;
   }
 
   var form = {
