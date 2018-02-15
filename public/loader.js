@@ -60,9 +60,9 @@ window.addEventListener('load', function () {
   }());
 
   function onMissingFeatures(missing) {
-    message.error(
-      'It seems your browser is not supported. The following features are missing:',
-      missing);
+    message.persist.error(
+      'It seems your browser is not supported. The following features are missing: ' + missing
+    );
   }
 
   function onError(err) {
@@ -70,7 +70,7 @@ window.addEventListener('load', function () {
     console.error(err);
     /* jshint +W117 */
 
-    message.error(
+    message.persist.error(
       'An error occured:',
       err.message || err
     );
