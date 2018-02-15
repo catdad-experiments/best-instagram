@@ -40,7 +40,9 @@ window.addEventListener('load', function () {
     }
 
     return {
-      info: show,
+      info: function (msg) {
+        show(String(msg), false);
+      },
       error: function (err) {
         show(String(err), true);
       }
