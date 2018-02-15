@@ -80,9 +80,9 @@ app.get('/instagram/login', function (req, res) {
   if (!code) {
     console.log('no login code received', req.query);
 
-    res.writeHead(302, {
+    res.writeHead(302, noCacheHeaders({
       location: getRootUrl(req) + '?error=true'
-    });
+    }));
     res.end();
     return;
   }
@@ -118,9 +118,9 @@ app.get('/instagram/login', function (req, res) {
       httpOnly: true,
       overwrite: true
     });
-    res.writeHead(302, {
+    res.writeHead(302, noCacheHeaders({
       location: getRootUrl(req)
-    });
+    }));
     res.end('');
   });
 });
