@@ -46,10 +46,10 @@ function noCache(req, res, next) {
 
 function writeError(res, message) {
   // hacky, but whatevs
-  noCache(null, res, function () {});
-
-  res.writeHead(580);
-  res.end(message.toString());
+  noCache(null, res, function () {
+    res.writeHead(580);
+    res.end(message.toString());
+  });
 }
 
 function getRootUrl(req) {
