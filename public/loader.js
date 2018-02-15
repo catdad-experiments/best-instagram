@@ -41,10 +41,10 @@ window.addEventListener('load', function () {
 
     return {
       info: function (msg) {
-        show(String(msg), false);
+        show(msg, false);
       },
       error: function (err) {
-        show(String(err), true);
+        show(err, true);
       }
     };
   }());
