@@ -37,7 +37,7 @@ ${indexHtml[1]}`;
 }());
 
 function writeError(res, message) {
-  res.writeHead(580);
+  res.writeHead(580, noCacheHeaders({}));
   res.end(message.toString());
 }
 
