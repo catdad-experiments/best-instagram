@@ -180,7 +180,7 @@ window.addEventListener('load', function () {
 
     if (query.error) {
       context.events.emit('flow:login');
-      message.error('There was a problem loggin in. Please try again.');
+      message.persist.error('There was a problem loggin in. Please try again.');
     } else if (window.TOKEN) {
       context.events.emit('flow:render');
     } else {
