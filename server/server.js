@@ -85,15 +85,15 @@ app.get('/', noCache, function (req, res) {
   res.end(renderIndex(token || TOKEN));
 });
 
-app.get('/instagram/login', function (req, res) {
+app.get('/instagram/login', noCache, function (req, res) {
   var code = req.query.code;
 
   if (!code) {
     console.log('no login code received', req.query);
 
-    res.writeHead(302, noCacheHeaders({
+    res.writeHead(302, {
       location: getRootUrl(req) + '?error=true'
-    }));
+    });
     res.end();
     return;
   }
@@ -129,9 +129,9 @@ app.get('/instagram/login', function (req, res) {
       httpOnly: true,
       overwrite: true
     });
-    res.writeHead(302, noCacheHeaders({
+    res.writeHead(302, {
       location: getRootUrl(req)
-    }));
+    });
     res.end('');
   });
 });
