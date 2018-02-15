@@ -36,6 +36,14 @@ ${indexHtml[1]}`;
   };
 }());
 
+function noCache(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  next();
+}
+
 function writeError(res, message) {
   // hacky, but whatevs
   noCache(null, res, function () {});
@@ -52,22 +60,6 @@ function getRootUrl(req) {
       `localhost:${PORT}`;
 
   return `${proto}://${host}`;
-}
-
-function noCacheHeaders(headers) {
-  return Object.assign({
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': 0
-  }, headers);
-}
-
-function noCache(req, res, next) {
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-
-  next();
 }
 
 app.use(cookies.connect());
