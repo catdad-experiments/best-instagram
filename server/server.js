@@ -59,18 +59,26 @@ function noCacheHeaders(headers) {
   }, headers);
 }
 
+function noCache(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  next();
+}
+
 app.use(cookies.connect());
 
-app.get('/', function (req, res) {
+app.get('/', noCache, function (req, res) {
   var token = '';
 
   try {
     token = req.cookies.get('igtoken') || token;
   } catch (e) { }
 
-  res.writeHead(200, noCacheHeaders({
+  res.writeHead(200, {
     'content-type': 'text/html'
-  }));
+  });
   res.end(renderIndex(token || TOKEN));
 });
 
