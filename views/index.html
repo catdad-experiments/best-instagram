@@ -31,15 +31,7 @@
     <div class="container">
       <div id="message" class="message">This is a message</div>
 
-      <div id="login-flow" class="flow hide">
-        <div class="flex-center">
-          <div class="controls">
-            <button id="login">Log In through Instagram</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="image-flow" class="flow hide">
+      <div id="flow" class="flow">
         <div class="flex-center">
           <div class="controls"></div>
           <div id="images" class="hero"></div>
@@ -60,19 +52,6 @@
       <span> by kirilv</span>
     </a>
   </footer>
-
-  <script>
-    (function () {
-      var loginFlow = document.querySelector('#login-flow');
-      var imageFlow = document.querySelector('#image-flow');
-
-      if (window.TOKEN) {
-        imageFlow.classList.remove('hide');
-      } else {
-        loginFlow.classList.remove('hide');
-      }
-    }());
-  </script>
 
   <!--CDN stuff-->
   <script src="https://www.kirilv.com/tiny.cdn/lib/request/latest/request.min.js"></script>
