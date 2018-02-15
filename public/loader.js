@@ -24,7 +24,7 @@ window.addEventListener('load', function () {
       hideTimeout = setTimeout(clear, time || 4000);
     }
 
-    function show(str, isError) {
+    function show(str, isError, persist) {
       if (isError) {
         messageDiv.classList.add('error');
       } else {
@@ -36,7 +36,9 @@ window.addEventListener('load', function () {
 
       messageDiv.classList.add('show');
 
-      autoClear();
+      if (persist !== true) {
+        autoClear();
+      }
     }
 
     return {
@@ -45,6 +47,14 @@ window.addEventListener('load', function () {
       },
       error: function (err) {
         show(err, true);
+      },
+      persist: {
+        info: function (msg) {
+          show(msg, false, true);
+        },
+        error: function (msg) {
+          show(msg, true, true);
+        }
       }
     };
   }());
