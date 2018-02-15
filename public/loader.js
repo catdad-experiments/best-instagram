@@ -154,8 +154,11 @@ window.addEventListener('load', function () {
       renderDestroy();
     });
 
-    // start the app
-    context.events.emit('start-video');
+    if (window.TOKEN) {
+      context.events.emit('flow:render');
+    } else {
+      context.events.emit('flow:login');
+    }
   }).catch(function (err) {
     context.events.emit('error', err);
     onError(err);

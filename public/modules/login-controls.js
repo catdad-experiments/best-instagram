@@ -6,7 +6,7 @@
 
   register(NAME, function () {
     var context = this;
-    var message = context.message;
+    var dom = context.dom;
     var renderMustache = context.renderMustache;
     var events = context.events;
 
@@ -20,11 +20,20 @@
       );
     }
 
-    var loginButton = document.querySelector('#login');
+    var loginButton = dom.elem('button', {
+      text: 'Log In through Instagram',
+      onClick: function () {
+        loginRedirect();
+      }
+    });
 
-    loginButton.onclick = function () {
-      loginRedirect();
-    };
+    var flow = document.querySelector('#flow');
+    var controls = flow.querySelector('.controls');
+
+    events.on('flow:login', function () {
+      dom.empty(controls);
+      dom.append(controls, loginButton);
+    });
 
     return function destroy() {};
   });

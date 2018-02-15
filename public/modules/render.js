@@ -161,7 +161,6 @@
 
       renderImageStream(stream)
       .then(function () {
-        message.info('all done!');
       })
       .catch(function (err) {
         dom.empty(imagesDiv);
