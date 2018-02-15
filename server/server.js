@@ -51,6 +51,14 @@ function getRootUrl(req) {
   return `${proto}://${host}`;
 }
 
+function noCacheHeaders(headers) {
+  return Object.assign({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': 0
+  }, headers);
+}
+
 app.use(cookies.connect());
 
 app.get('/', function (req, res) {
@@ -60,12 +68,9 @@ app.get('/', function (req, res) {
     token = req.cookies.get('igtoken') || token;
   } catch (e) { }
 
-  res.writeHead(200, {
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': 0,
+  res.writeHead(200, noCacheHeaders({
     'content-type': 'text/html'
-  });
+  }));
   res.end(renderIndex(token || TOKEN));
 });
 
