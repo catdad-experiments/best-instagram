@@ -24,7 +24,7 @@ window.addEventListener('load', function () {
       hideTimeout = setTimeout(clear, time || 4000);
     }
 
-    function show(str, isError) {
+    function show(str, isError, persist) {
       if (isError) {
         messageDiv.classList.add('error');
       } else {
@@ -36,21 +36,33 @@ window.addEventListener('load', function () {
 
       messageDiv.classList.add('show');
 
-      autoClear();
+      if (persist !== true) {
+        autoClear();
+      }
     }
 
     return {
-      info: show,
+      info: function (msg) {
+        show(msg, false);
+      },
       error: function (err) {
-        show(String(err), true);
+        show(err, true);
+      },
+      persist: {
+        info: function (msg) {
+          show(msg, false, true);
+        },
+        error: function (msg) {
+          show(msg, true, true);
+        }
       }
     };
   }());
 
   function onMissingFeatures(missing) {
-    message.error(
-      'It seems your browser is not supported. The following features are missing:',
-      missing);
+    message.persist.error(
+      'It seems your browser is not supported. The following features are missing: ' + missing
+    );
   }
 
   function onError(err) {
@@ -58,7 +70,7 @@ window.addEventListener('load', function () {
     console.error(err);
     /* jshint +W117 */
 
-    message.error(
+    message.persist.error(
       'An error occured:',
       err.message || err
     );
