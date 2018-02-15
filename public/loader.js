@@ -168,12 +168,11 @@ window.addEventListener('load', function () {
 
     var query = (function parseQuery(queryArr) {
       return queryArr.reduce(function (memo, val) {
-        if (!val) {
-          return memo;
+        if (val) {
+          var q = val.split('=');
+          memo[q.shift()] = q.join('=');
         }
 
-        var q = val.split('=');
-        memo[q.shift()] = q.join('=');
         return memo;
       }, {});
     }(window.location.search.substring(1).split('&')));
