@@ -154,7 +154,22 @@ window.addEventListener('load', function () {
       renderDestroy();
     });
 
-    if (window.TOKEN) {
+    var query = (function parseQuery(queryArr) {
+      return queryArr.reduce(function (memo, val) {
+        if (!val) {
+          return memo;
+        }
+
+        var q = val.split('=');
+        memo[q.shift()] = q.join('=');
+        return memo;
+      }, {});
+    }(window.location.search.substring(1).split('&')));
+
+    if (query.error) {
+      context.events.emit('flow:login');
+      message.error('There was a problem loggin in. Please try again.');
+    } else if (window.TOKEN) {
       context.events.emit('flow:render');
     } else {
       context.events.emit('flow:login');
