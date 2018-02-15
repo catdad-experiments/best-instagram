@@ -152,7 +152,7 @@ button:focus {
 
 .message.show {
   padding: 20px;
-  max-height: 4rem;
+  max-height: 100%;
 }
 
 .controls {
