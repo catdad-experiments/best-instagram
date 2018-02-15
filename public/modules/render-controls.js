@@ -10,7 +10,7 @@
     var renderMustache = context.renderMustache;
     var events = context.events;
 
-    var flow = document.querySelector('#image-flow');
+    var flow = document.querySelector('#flow');
     var controls = flow.querySelector('.controls');
 
     function onClick(opts) {
@@ -63,13 +63,16 @@
       onClick: onClick({})
     });
 
-    dom.append(controls, [
-      instruction,
-      days30,
-      year2018,
-      year2017,
-      allTime
-    ]);
+    events.on('flow:render', function () {
+      dom.empty(controls);
+      dom.append(controls, [
+        instruction,
+        days30,
+        year2018,
+        year2017,
+        allTime
+      ]);
+    });
 
     return function destroy() {};
   });
