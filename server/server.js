@@ -37,7 +37,10 @@ ${indexHtml[1]}`;
 }());
 
 function writeError(res, message) {
-  res.writeHead(580, noCacheHeaders({}));
+  // hacky, but whatevs
+  noCache(null, res, function () {});
+
+  res.writeHead(580);
   res.end(message.toString());
 }
 
