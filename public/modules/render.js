@@ -105,7 +105,6 @@
       'font-family="sans-serif" fill="white" stroke="black" font-size="42pt">' +
       sortedPosts.reduce(function (str, post, idx) {
         var canvasSize = getCanvasCoordinates(idx);
-        console.log(idx, canvasSize);
 
         return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">' +
           'L ' + post.likes + ', C ' + post.comments +
