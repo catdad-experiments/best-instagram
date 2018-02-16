@@ -105,11 +105,10 @@
       'font-family="sans-serif" fill="white" stroke="black" font-size="42pt">' +
       sortedPosts.reduce(function (str, post, idx) {
         var canvasSize = getCanvasCoordinates(idx);
-        console.log(idx, canvasSize);
 
-        return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">'
-          + 'L ' + post.likes + ', C ' + post.comments
-          + '</text>';
+        return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">' +
+          'L ' + post.likes + ', C ' + post.comments +
+          '</text>';
       }, '') +
     '</svg>';
 
@@ -155,6 +154,8 @@
     var message = context.message;
     var events = context.events;
 
+    var renderStats = false;
+
     function progress(text) {
       dom.empty(imagesDiv);
       dom.append(imagesDiv, dom.text(text));
@@ -164,26 +165,18 @@
       return collectBestPosts(stream).then(function (allPosts) {
         // get a rendered dom element with the image
         return renderToCanvas(allPosts).then(function (canvas) {
-          if (!canvas) {
-            return Promise.reject(new Error('failed to render the image, please try again'));
+          if (!renderStats) {
+            return Promise.resolve(canvas);
           }
 
-          return Promise.resolve(canvas);
-        }).then(function (canvas) {
           return renderStatsToCanvas(allPosts, canvas);
-        }).then(function (canvas) {
-
+        });
+      }).then(function (canvas) {
+        // get the data from the canvas and render it as an
+        // image element
+        return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
           dom.empty(imagesDiv);
-          dom.append(imagesDiv, canvas);
-
-          return;
-
-          // get the data from the canvas and render it as an
-          // image element
-          return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
-            dom.empty(imagesDiv);
-            dom.append(imagesDiv, img);
-          });
+          dom.append(imagesDiv, img);
         });
       });
     }
