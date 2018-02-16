@@ -7,6 +7,7 @@
   register(NAME, function () {
     var context = this;
     var dom = context.dom;
+    var message = context.message;
     var renderMustache = context.renderMustache;
     var events = context.events;
 
@@ -30,9 +31,15 @@
     var flow = document.querySelector('#flow');
     var controls = flow.querySelector('.controls');
 
-    events.on('flow:login', function () {
+    function showLogin() {
       dom.empty(controls);
       dom.append(controls, loginButton);
+    }
+
+    events.on('flow:login', showLogin);
+    events.on('flow:login:error', function (err) {
+      message.persist.error(err);
+      showLogin();
     });
 
     return function destroy() {};
