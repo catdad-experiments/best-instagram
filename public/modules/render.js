@@ -200,6 +200,14 @@
       .then(function () {
       })
       .catch(function (err) {
+        if (err.code === 'EAPIERR') {
+          // instagram returned an error... we will assume the
+          // user has been logged out or the token is expired,
+          // since that is the only error I am aware of
+          return events.emit('flow:login:error', err);
+        }
+
+        // we have other error...
         dom.empty(imagesDiv);
         message.error(err);
       });
