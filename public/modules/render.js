@@ -164,10 +164,6 @@
       return collectBestPosts(stream).then(function (allPosts) {
         // get a rendered dom element with the image
         return renderToCanvas(allPosts).then(function (canvas) {
-          if (!canvas) {
-            return Promise.reject(new Error('failed to create the image, please try again'));
-          }
-
           return Promise.resolve(canvas);
         }).then(function (canvas) {
           return renderStatsToCanvas(allPosts, canvas);
