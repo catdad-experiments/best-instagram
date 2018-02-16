@@ -4,6 +4,9 @@
 (function (register) {
   var NAME = 'render';
 
+  // this is the size that instagram serves (as the width)
+  var SIZE =  640;
+
   var imagesDiv = document.querySelector('#images');
 
   // TODO make this a helper
@@ -27,6 +30,15 @@
     });
   }
 
+  function getCanvasCoordinates(idx) {
+    return {
+      dx: (SIZE * (idx % 3)),
+      dy: SIZE * Math.floor(idx / 3),
+      width: SIZE,
+      height: SIZE
+    };
+  }
+
   // take the list of posts and render them to the page,
   // for the user's delight
   function renderToCanvas(sortedPosts) {
@@ -40,19 +52,16 @@
     })).then(function (images) {
       var canvas = document.createElement('canvas');
 
-      // this is the size that instagram serves (as the width)
-      var size = 640;
       // destination size dimension
-      var dim = size;
-      canvas.width = size * 3;
-      canvas.height = size * 3;
+      var dim = SIZE;
+      canvas.width = SIZE * 3;
+      canvas.height = SIZE * 3;
 
       var context = canvas.getContext('2d');
       var dx, dy = 0;
 
       images.forEach(function (img, idx) {
-        var i = (idx) % 3;
-        dx = size * i;
+        var canvasSize = getCanvasCoordinates(idx);
 
         var w = img.naturalWidth;
         var h = img.naturalHeight;
@@ -73,14 +82,39 @@
           dim = h;
         }
 
-        context.drawImage(img, sx, sy, dim, dim, dx, dy, size, size);
-
-        // when we reach the end of the row,
-        // update to use the next row
-        if (i === 2) {
-          dy += size;
-        }
+        context.drawImage(img, sx, sy, dim, dim, canvasSize.dx, canvasSize.dy, SIZE, SIZE);
       });
+
+      return Promise.resolve(canvas);
+    });
+  }
+
+  function renderStatsToCanvas(sortedPosts, canvas) {
+    var context = canvas.getContext('2d');
+    var viewBox = '0 0 ' + (SIZE * 3) + ' ' + (SIZE * 3);
+
+    function offsetX(x) {
+      return x + 20;
+    }
+
+    function offsetY(y) {
+      return y + SIZE - 20;
+    }
+
+    var str = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + viewBox + '" ' +
+      'font-family="sans-serif" fill="white" stroke="black" font-size="42pt">' +
+      sortedPosts.reduce(function (str, post, idx) {
+        var canvasSize = getCanvasCoordinates(idx);
+        console.log(idx, canvasSize);
+
+        return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">'
+          + 'L ' + post.likes + ', C ' + post.comments
+          + '</text>';
+      }, '') +
+    '</svg>';
+
+    return getLoadedImage('data:image/svg+xml;base64,' + btoa(str)).then(function (img) {
+      context.drawImage(img, 0, 0, SIZE * 3, SIZE * 3);
 
       return Promise.resolve(canvas);
     });
@@ -131,8 +165,18 @@
         // get a rendered dom element with the image
         return renderToCanvas(allPosts).then(function (canvas) {
           if (!canvas) {
-            return;
+            return Promise.reject(new Error('failed to render the image, please try again'));
           }
+
+          return Promise.resolve(canvas);
+        }).then(function (canvas) {
+          return renderStatsToCanvas(allPosts, canvas);
+        }).then(function (canvas) {
+
+          dom.empty(imagesDiv);
+          dom.append(imagesDiv, canvas);
+
+          return;
 
           // get the data from the canvas and render it as an
           // image element
