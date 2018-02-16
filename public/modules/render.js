@@ -202,7 +202,6 @@
       .catch(function (err) {
         dom.empty(imagesDiv);
 
-
         if (err.code === 'EAPIERR') {
           // instagram returned an error... we will assume the
           // user has been logged out or the token is expired,
