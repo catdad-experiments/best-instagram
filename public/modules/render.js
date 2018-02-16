@@ -89,6 +89,37 @@
     });
   }
 
+  function renderStatsToCanvas(sortedPosts, canvas) {
+    var context = canvas.getContext('2d');
+    var viewBox = '0 0 ' + (SIZE * 3) + ' ' + (SIZE * 3);
+
+    function offsetX(x) {
+      return x + 20;
+    }
+
+    function offsetY(y) {
+      return y + SIZE - 20;
+    }
+
+    var str = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + viewBox + '" ' +
+      'font-family="sans-serif" fill="white" stroke="black" font-size="42pt">' +
+      sortedPosts.reduce(function (str, post, idx) {
+        var canvasSize = getCanvasCoordinates(idx);
+        console.log(idx, canvasSize);
+
+        return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">'
+          + 'L ' + post.likes + ', C ' + post.comments
+          + '</text>';
+      }, '') +
+    '</svg>';
+
+    return getLoadedImage('data:image/svg+xml;base64,' + btoa(str)).then(function (img) {
+      context.drawImage(img, 0, 0, SIZE * 3, SIZE * 3);
+
+      return Promise.resolve(canvas);
+    });
+  }
+
   function collectBestPosts(stream) {
     return new Promise(function (resolve, reject) {
       var allPosts = [];
@@ -134,8 +165,18 @@
         // get a rendered dom element with the image
         return renderToCanvas(allPosts).then(function (canvas) {
           if (!canvas) {
-            return;
+            return Promise.reject(new Error('failed to render the image, please try again'));
           }
+
+          return Promise.resolve(canvas);
+        }).then(function (canvas) {
+          return renderStatsToCanvas(allPosts, canvas);
+        }).then(function (canvas) {
+
+          dom.empty(imagesDiv);
+          dom.append(imagesDiv, canvas);
+
+          return;
 
           // get the data from the canvas and render it as an
           // image element
