@@ -158,7 +158,10 @@
 
     function progress(text) {
       dom.empty(imagesDiv);
-      dom.append(imagesDiv, dom.text(text));
+
+      if (text) {
+        dom.append(imagesDiv, dom.text(text));
+      }
     }
 
     function renderImageStream(stream) {
@@ -200,6 +203,8 @@
       .then(function () {
       })
       .catch(function (err) {
+        progress();
+
         if (err.code === 'EAPIERR') {
           // instagram returned an error... we will assume the
           // user has been logged out or the token is expired,
