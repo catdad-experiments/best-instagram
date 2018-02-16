@@ -107,9 +107,9 @@
         var canvasSize = getCanvasCoordinates(idx);
         console.log(idx, canvasSize);
 
-        return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">'
-          + 'L ' + post.likes + ', C ' + post.comments
-          + '</text>';
+        return str + '<text x="' + offsetX(canvasSize.dx) + '" y="' + offsetY(canvasSize.dy) + '">' +
+          'L ' + post.likes + ', C ' + post.comments +
+          '</text>';
       }, '') +
     '</svg>';
 
