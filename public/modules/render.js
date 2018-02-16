@@ -155,6 +155,8 @@
     var message = context.message;
     var events = context.events;
 
+    var renderStats = false;
+
     function progress(text) {
       dom.empty(imagesDiv);
       dom.append(imagesDiv, dom.text(text));
@@ -166,6 +168,10 @@
         return renderToCanvas(allPosts).then(function (canvas) {
           return Promise.resolve(canvas);
         }).then(function (canvas) {
+          if (!renderStats) {
+            return Promise.resolve(canvas);
+          }
+
           return renderStatsToCanvas(allPosts, canvas);
         });
       }).then(function (canvas) {
