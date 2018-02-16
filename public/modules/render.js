@@ -209,7 +209,7 @@
           // instagram returned an error... we will assume the
           // user has been logged out or the token is expired,
           // since that is the only error I am aware of
-          return events.emit('flow:login:error', err);
+          return events.emit('flow:login:error', 'Something went wrong. Please log in again.');
         }
 
         // we have other error...
