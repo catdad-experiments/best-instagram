@@ -158,10 +158,7 @@
 
     function progress(text) {
       dom.empty(imagesDiv);
-
-      if (text) {
-        dom.append(imagesDiv, dom.text(text));
-      }
+      dom.append(imagesDiv, dom.text(text));
     }
 
     function renderImageStream(stream) {
@@ -203,7 +200,8 @@
       .then(function () {
       })
       .catch(function (err) {
-        progress();
+        dom.empty(imagesDiv);
+
 
         if (err.code === 'EAPIERR') {
           // instagram returned an error... we will assume the
@@ -213,7 +211,6 @@
         }
 
         // we have other error...
-        dom.empty(imagesDiv);
         message.error(err);
       });
     });
