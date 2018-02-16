@@ -165,8 +165,6 @@
       return collectBestPosts(stream).then(function (allPosts) {
         // get a rendered dom element with the image
         return renderToCanvas(allPosts).then(function (canvas) {
-          return Promise.resolve(canvas);
-        }).then(function (canvas) {
           if (!renderStats) {
             return Promise.resolve(canvas);
           }
