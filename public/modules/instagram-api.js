@@ -28,7 +28,10 @@
           }
 
           if (body.meta && body.meta.code !== 200) {
-            return reject(new Error('unknown meta code ' + body.meta.code));
+            var apiErr = new Error('unknown meta code ' + body.meta.code);
+            apiErr.code = 'EAPIERR';
+
+            return reject(apiErr);
           }
 
           return resolve(body);

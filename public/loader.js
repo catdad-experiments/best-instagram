@@ -178,8 +178,7 @@ window.addEventListener('load', function () {
     }(window.location.search.substring(1).split('&')));
 
     if (query.error) {
-      context.events.emit('flow:login');
-      message.persist.error('There was a problem loggin in. Please try again.');
+      context.events.emit('flow:login:error', 'There was a problem loggin in. Please try again.');
     } else if (window.TOKEN) {
       context.events.emit('flow:render');
     } else {
