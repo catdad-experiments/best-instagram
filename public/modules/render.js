@@ -4,6 +4,9 @@
 (function (register) {
   var NAME = 'render';
 
+  // this is the size that instagram serves (as the width)
+  var SIZE =  640;
+
   var imagesDiv = document.querySelector('#images');
 
   // TODO make this a helper
@@ -27,6 +30,15 @@
     });
   }
 
+  function getCanvasCoordinates(idx) {
+    return {
+      dx: (SIZE * (idx % 3)),
+      dy: SIZE * Math.floor(idx / 3),
+      width: SIZE,
+      height: SIZE
+    };
+  }
+
   // take the list of posts and render them to the page,
   // for the user's delight
   function renderToCanvas(sortedPosts) {
@@ -40,19 +52,16 @@
     })).then(function (images) {
       var canvas = document.createElement('canvas');
 
-      // this is the size that instagram serves (as the width)
-      var size = 640;
       // destination size dimension
-      var dim = size;
-      canvas.width = size * 3;
-      canvas.height = size * 3;
+      var dim = SIZE;
+      canvas.width = SIZE * 3;
+      canvas.height = SIZE * 3;
 
       var context = canvas.getContext('2d');
       var dx, dy = 0;
 
       images.forEach(function (img, idx) {
-        var i = (idx) % 3;
-        dx = size * i;
+        var canvasSize = getCanvasCoordinates(idx);
 
         var w = img.naturalWidth;
         var h = img.naturalHeight;
@@ -73,13 +82,7 @@
           dim = h;
         }
 
-        context.drawImage(img, sx, sy, dim, dim, dx, dy, size, size);
-
-        // when we reach the end of the row,
-        // update to use the next row
-        if (i === 2) {
-          dy += size;
-        }
+        context.drawImage(img, sx, sy, dim, dim, canvasSize.dx, canvasSize.dy, SIZE, SIZE);
       });
 
       return Promise.resolve(canvas);
