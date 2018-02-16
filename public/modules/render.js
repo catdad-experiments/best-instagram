@@ -167,17 +167,17 @@
           return Promise.resolve(canvas);
         }).then(function (canvas) {
           return renderStatsToCanvas(allPosts, canvas);
-        }).then(function (canvas) {
+        });
+      }).then(function (canvas) {
 
+        dom.empty(imagesDiv);
+        dom.append(imagesDiv, canvas);
+
+        // get the data from the canvas and render it as an
+        // image element
+        return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
           dom.empty(imagesDiv);
-          dom.append(imagesDiv, canvas);
-
-          // get the data from the canvas and render it as an
-          // image element
-          return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
-            dom.empty(imagesDiv);
-            dom.append(imagesDiv, img);
-          });
+          dom.append(imagesDiv, img);
         });
       });
     }
