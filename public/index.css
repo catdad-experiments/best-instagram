@@ -20,6 +20,7 @@ html, body, button {
 }
 
 header {
+  background: #101010;
   position: absolute;
   top: 0;
   width: 100%;
