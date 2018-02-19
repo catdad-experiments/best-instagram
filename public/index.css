@@ -4,7 +4,7 @@ html, body {
   height: 100%;
 
   font-size: 12pt;
-  color: #f4f4f4;
+  color: #151515;
 }
 
 html, body, button {
@@ -20,7 +20,8 @@ html, body, button {
 }
 
 header {
-  background: #101010;
+  background: #151515;
+  color: #f4f4f4;
   position: absolute;
   top: 0;
   width: 100%;
@@ -39,11 +40,12 @@ footer {
   padding: 6px;
   text-align: center;
   font-size: 0.8rem;
+  background: #d0d0d0;
 }
 
 footer a {
   text-decoration: none;
-  color: #f4f4f4;
+  color: #151515;
 }
 
 footer span {
@@ -51,10 +53,10 @@ footer span {
 }
 
 button {
-  color: #f4f4f4;
-  background: #e0003e;
+  color: #151515;
+  background: #ffffff;
+  border: 2px solid #151515;
 
-  border: none;
   outline: none;
   border-radius: 3px;
   margin: 6px 3px;
@@ -66,7 +68,7 @@ button {
 }
 
 button:focus {
-  background: #d40019;
+  background: #e5e5e5;
 }
 
 .hide, .flow.hide {
@@ -106,11 +108,6 @@ button:focus {
   margin: 0 auto;
   text-align: center;
   overflow: hidden;
-
-  border-radius: 12px;
-
-  color: #383838;
-  background: white;
 }
 
 .flow {
