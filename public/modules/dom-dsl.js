@@ -1,4 +1,4 @@
-/* jshint browser: true, devel: true */
+/* jshint browser: true */
 
 (function (register) {
   var NAME = 'dom-dsl';

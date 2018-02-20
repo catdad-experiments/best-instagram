@@ -1,4 +1,4 @@
-/* jshint browser: true, devel: true */
+/* jshint browser: true */
 /* globals Promise, CLIENT_ID, REDIRECT_URI */
 
 (function (register) {
