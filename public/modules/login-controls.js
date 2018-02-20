@@ -1,5 +1,5 @@
 /* jshint browser: true, devel: true */
-/* globals request, Promise, TOKEN, CLIENT_ID, REDIRECT_URI */
+/* globals Promise, CLIENT_ID, REDIRECT_URI */
 
 (function (register) {
   var NAME = 'login-controls';

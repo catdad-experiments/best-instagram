@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* globals request, Promise, TOKEN, CLIENT_ID, REDIRECT_URI */
+/* globals Promise */
 
 (function (register) {
   var NAME = 'render';
