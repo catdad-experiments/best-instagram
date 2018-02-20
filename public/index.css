@@ -42,12 +42,12 @@ footer {
   padding: 6px;
   text-align: center;
   font-size: 0.8rem;
-  background: #d0d0d0;
+  background: #808080;
 }
 
 footer a {
   text-decoration: none;
-  color: #262626;
+  color: #f4f4f4;
 }
 
 footer span {
