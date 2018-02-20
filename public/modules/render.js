@@ -206,7 +206,7 @@
       .then(function () {
       })
       .catch(function (err) {
-        dom.empty(hero);
+        dom.remove(hero);
 
         if (err.code === 'EAPIERR') {
           // instagram returned an error... we will assume the
