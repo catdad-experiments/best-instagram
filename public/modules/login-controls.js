@@ -28,12 +28,16 @@
       }
     });
 
-    var flow = document.querySelector('#flow');
-    var controls = flow.querySelector('.controls');
+    var controls = dom.elem('div', {
+      className: 'controls',
+      children: loginButton
+    });
+
+    var contents = document.querySelector('#contents');
 
     function showLogin() {
-      dom.empty(controls);
-      dom.append(controls, loginButton);
+      dom.empty(contents);
+      dom.append(contents, controls);
     }
 
     events.on('flow:login', showLogin);
