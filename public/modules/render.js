@@ -7,7 +7,7 @@
   // this is the size that instagram serves (as the width)
   var SIZE =  640;
 
-  var imagesDiv = document.querySelector('#images');
+  var contents = document.querySelector('#contents');
 
   // TODO make this a helper
   // get an image object with the source already loaded
@@ -156,9 +156,13 @@
 
     var renderStats = false;
 
+    var hero = dom.elem('div', {
+      className: 'hero'
+    });
+
     function progress(text) {
-      dom.empty(imagesDiv);
-      dom.append(imagesDiv, dom.text(text));
+      dom.empty(hero);
+      dom.append(hero, dom.text(text));
     }
 
     function renderImageStream(stream) {
@@ -175,8 +179,8 @@
         // get the data from the canvas and render it as an
         // image element
         return getLoadedImage(canvas.toDataURL('image/png')).then(function (img) {
-          dom.empty(imagesDiv);
-          dom.append(imagesDiv, img);
+          dom.empty(hero);
+          dom.append(hero, img);
         });
       });
     }
@@ -184,6 +188,8 @@
     events.on('create-render', function (opts) {
       var stream = context.getInstagramPosts(opts);
       var totalCount = 0;
+
+      dom.append(contents, hero);
 
       progress('Fetching posts...');
 
@@ -200,7 +206,7 @@
       .then(function () {
       })
       .catch(function (err) {
-        dom.empty(imagesDiv);
+        dom.empty(hero);
 
         if (err.code === 'EAPIERR') {
           // instagram returned an error... we will assume the
