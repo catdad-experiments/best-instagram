@@ -27,6 +27,12 @@
     return parent;
   }
 
+  function remove(elem) {
+    if (elem.parentElement) {
+      elem.parentElement.removeChild(elem);
+    }
+  }
+
   function empty(parent) {
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
@@ -65,6 +71,7 @@
       text: text,
       elem: elem,
       append: append,
+      remove: remove,
       empty: empty
     };
 
