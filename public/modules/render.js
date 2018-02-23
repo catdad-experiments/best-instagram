@@ -125,6 +125,11 @@
       return b.likes - a.likes;
     }
 
+    // most comments first
+    if (a.comments !== b.comments) {
+      return b.comments - a.comments;
+    }
+
     // latest posts first
     return b.datetime.getTime() - a.datetime.getTime();
   }
