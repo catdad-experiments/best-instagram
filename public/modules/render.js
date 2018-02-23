@@ -119,6 +119,16 @@
     });
   }
 
+  function sortPosts(a, b) {
+    // most likes first
+    if (a.likes !== b.likes) {
+      return b.likes - a.likes;
+    }
+
+    // latest posts first
+    return b.datetime.getTime() - a.datetime.getTime();
+  }
+
   function collectBestPosts(stream) {
     return new Promise(function (resolve, reject) {
       var allPosts = [];
@@ -127,10 +137,7 @@
         // keep track of all posts we've retrieved
         // and sort them
         allPosts = allPosts.concat(posts);
-        allPosts.sort(function (a, b) {
-          // most likes first
-          return b.likes - a.likes;
-        });
+        allPosts.sort(sortPosts);
       });
 
       stream.on('end', function () {
