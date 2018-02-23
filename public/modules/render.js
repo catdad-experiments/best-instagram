@@ -139,10 +139,10 @@
       var allPosts = [];
 
       stream.on('data', function (posts) {
-        // keep track of all posts we've retrieved
-        // and sort them
-        allPosts = allPosts.concat(posts);
-        allPosts.sort(sortPosts);
+        // keep track of only the best 9 we have retrieved so far...
+        // anything not already at the top will only fall further
+        // back down as we get new posts
+        allPosts = allPosts.concat(posts).sort(sortPosts).slice(0, 9);
       });
 
       stream.on('end', function () {
@@ -151,7 +151,7 @@
           return reject(new Error('not enough posts'));
         }
 
-        resolve(allPosts.slice(0, 9));
+        resolve(allPosts);
       });
 
       stream.on('error', function (err) {
